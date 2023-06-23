@@ -1,0 +1,16 @@
+{
+   "start_day": 0,
+   "simulation_duration_days": 365,
+   "step": 60,
+   "reset_frequency": 5,
+   "resets": {
+       "chw": "configs/chw_reset.config",
+       "hw": "configs/hw_reset.config",
+       "dct1": "configs/floor1_static_reset.config",
+       "dat1": "configs/floor1_dat_reset.config"
+
+   },
+   "controller": {
+       "vent": "configs/ventilation.config"
+   }
+}
