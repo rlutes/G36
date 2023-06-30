@@ -3,7 +3,7 @@ model ReadAhu "Collection of AHU measurements for BOPTEST"
   Buildings.Utilities.IO.SignalExchange.Read TSup(
     description="Supply air temperature measurement for AHU",
     KPIs=Buildings.Utilities.IO.SignalExchange.SignalTypes.SignalsForKPIs.None,
-    y(unit="K")) "Supply air temperature measurement"
+    y(unit="K"))  "Supply air temperature measurement"
     annotation (Placement(transformation(extent={{0,190},{20,210}})));
   Buildings.Utilities.IO.SignalExchange.Read TMix(
     description="Mixed air temperature measurement for AHU",
@@ -18,7 +18,7 @@ model ReadAhu "Collection of AHU measurements for BOPTEST"
   Buildings.Utilities.IO.SignalExchange.Read V_flow_sup(
     description="Supply air flowrate measurement for AHU",
     KPIs=Buildings.Utilities.IO.SignalExchange.SignalTypes.SignalsForKPIs.None,
-    y(unit="m3/s")) "Supply air flowrate measurement"
+    y(unit="m3/s"))  "Supply air flowrate measurement"
     annotation (Placement(transformation(extent={{0,100},{20,120}})));
   Buildings.Utilities.IO.SignalExchange.Read V_flow_ret(
     description="Return air flowrate measurement for AHU",
@@ -112,74 +112,6 @@ model ReadAhu "Collection of AHU measurements for BOPTEST"
     y(unit="K")) "Heating coil water return temperature measurement"
     annotation (Placement(transformation(extent={{0,-200},{20,-180}})));
 
-  Modelica.Blocks.Interfaces.RealInput yHeaCoi_in
-    "AHU heating coil valve signal"
-    annotation (Placement(transformation(extent={{-140,-260},{-100,-220}})));
-  Buildings.Utilities.IO.SignalExchange.Read yHeaCoi(
-    description="Heating coil valve signal measurement for AHU",
-    KPIs=Buildings.Utilities.IO.SignalExchange.SignalTypes.SignalsForKPIs.None, y(unit="1")) "AHU heating coil valve signal measurement"
-    annotation (Placement(transformation(extent={{0,-250},{20,-230}})));
-
-  Modelica.Blocks.Interfaces.RealInput yCooCoi_in
-    "AHU cooling coil valve signal"
-    annotation (Placement(transformation(extent={{-140,-290},{-100,-250}})));
-  Buildings.Utilities.IO.SignalExchange.Read yCooCoi(
-    description="Cooling coil valve signal measurement for AHU",
-    KPIs=Buildings.Utilities.IO.SignalExchange.SignalTypes.SignalsForKPIs.None, y(unit="1")) "AHU cooling coil valve signal measurement"
-    annotation (Placement(transformation(extent={{0,-280},{20,-260}})));
-
-  Buildings.Utilities.IO.SignalExchange.Read yHeaVal(
-    description="AHU heating coil valve position measurement",
-    KPIs=Buildings.Utilities.IO.SignalExchange.SignalTypes.SignalsForKPIs.None, y(unit="1")) "AHU heating coil valve position measurement"
-    annotation (Placement(transformation(extent={{-2,-310},{18,-290}})));
-
-  Buildings.Utilities.IO.SignalExchange.Read yCooVal(
-    description="AHU cooling coil valve position measurement",
-    KPIs=Buildings.Utilities.IO.SignalExchange.SignalTypes.SignalsForKPIs.None, y(unit="1"))
-    "AHU cooling coil valve position measurement"
-    annotation (Placement(transformation(extent={{-2,-340},{18,-320}})));
-
-  Modelica.Blocks.Interfaces.RealInput yHeaVal_in
-    "AHU heating coil valve position measurement"
-    annotation (Placement(transformation(extent={{-142,-320},{-102,-280}})));
-  Modelica.Blocks.Interfaces.RealInput yCooVal_in
-    "AHU cooling coil valve position measurement"
-    annotation (Placement(transformation(extent={{-142,-350},{-102,-310}})));
-  Buildings.Utilities.IO.SignalExchange.Read TSup_set(
-    description="Supply air temperature setpoint measurement for AHU",
-    KPIs=Buildings.Utilities.IO.SignalExchange.SignalTypes.SignalsForKPIs.None,
-    y(unit="K")) "Supply air temperature setpoint measurement"
-    annotation (Placement(transformation(extent={{-4,250},{16,270}})));
-
-  Modelica.Blocks.Interfaces.RealInput TSup_set_in
-    "Supply air temperature setpoint"
-    annotation (Placement(transformation(extent={{-144,240},{-104,280}})));
-  Modelica.Blocks.Interfaces.BooleanInput occ_in "Occupancy status "
-    annotation (Placement(transformation(extent={{-146,274},{-106,314}})));
-  Modelica.Blocks.Math.BooleanToReal booleanToReal
-    annotation (Placement(transformation(extent={{-68,276},{-48,296}})));
-  Buildings.Utilities.IO.SignalExchange.Read occ(
-    description="Occupancy status (1 occupied, 0 unoccupied)",
-    KPIs=Buildings.Utilities.IO.SignalExchange.SignalTypes.SignalsForKPIs.None, y(unit="1")) "Occupancy status (1 occupied, 0 unoccupied)"
-    annotation (Placement(transformation(extent={{-2,278},{18,298}})));
-  Buildings.Utilities.IO.SignalExchange.Read yOA(
-    description="AHU cooling coil valve position measurement",
-    KPIs=Buildings.Utilities.IO.SignalExchange.SignalTypes.SignalsForKPIs.None,
-    y(unit="1")) "AHU OA damper position measurement"
-    annotation (Placement(transformation(extent={{2,42},{22,62}})));
-
-  Modelica.Blocks.Interfaces.RealInput yOA_in
-    "AHU OA damper position measurement"
-    annotation (Placement(transformation(extent={{-138,32},{-98,72}})));
-  Buildings.Utilities.IO.SignalExchange.Read V_flow_OA(
-    description="Supply outdoor airflow rate measurement for AHU",
-    KPIs=Buildings.Utilities.IO.SignalExchange.SignalTypes.SignalsForKPIs.None,
-
-    y(unit="m3/s")) "Supply outdoor airflow rate measurement"
-    annotation (Placement(transformation(extent={{2,-370},{22,-350}})));
-  Modelica.Blocks.Interfaces.RealInput V_flow_OA_in
-    "Supply outdoor airflow rate measurement"
-    annotation (Placement(transformation(extent={{-138,-380},{-98,-340}})));
 equation
   connect(TSup.u, TSup_in)
     annotation (Line(points={{-2,200},{-120,200}}, color={0,0,127}));
@@ -215,27 +147,9 @@ equation
     annotation (Line(points={{-120,-130},{-2,-130}}, color={0,0,127}));
   connect(TCooCoiSup_in, TCooCoiSup.u) annotation (Line(points={{-120,-100},{
           -62,-100},{-62,-100},{-2,-100}}, color={0,0,127}));
-  connect(yHeaCoi_in, yHeaCoi.u)
-    annotation (Line(points={{-120,-240},{-2,-240}}, color={0,0,127}));
-  connect(yCooCoi_in, yCooCoi.u)
-    annotation (Line(points={{-120,-270},{-2,-270}}, color={0,0,127}));
-  connect(yHeaVal_in, yHeaVal.u)
-    annotation (Line(points={{-122,-300},{-4,-300}}, color={0,0,127}));
-  connect(yCooVal_in, yCooVal.u)
-    annotation (Line(points={{-122,-330},{-4,-330}}, color={0,0,127}));
-  connect(TSup_set.u, TSup_set_in)
-    annotation (Line(points={{-6,260},{-124,260}}, color={0,0,127}));
-  connect(occ_in, booleanToReal.u) annotation (Line(points={{-126,294},{-98,294},
-          {-98,286},{-70,286}}, color={255,0,255}));
-  connect(occ.u, booleanToReal.y) annotation (Line(points={{-4,288},{-40,288},{-40,
-          286},{-47,286}}, color={0,0,127}));
-  connect(yOA_in, yOA.u)
-    annotation (Line(points={{-118,52},{0,52}}, color={0,0,127}));
-  connect(V_flow_OA_in, V_flow_OA.u)
-    annotation (Line(points={{-118,-360},{0,-360}}, color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,
-            -360},{100,300}}), graphics={Rectangle(
-          extent={{-100,238},{100,-360}},
+            -200},{100,200}}), graphics={Rectangle(
+          extent={{-100,200},{100,-200}},
           lineColor={0,0,0},
           fillColor={255,170,170},
           fillPattern=FillPattern.Solid), Text(
@@ -249,5 +163,5 @@ equation
           lineColor={0,0,0},
           textString="Read
 AHU")}),                         Diagram(coordinateSystem(preserveAspectRatio=
-            false, extent={{-100,-360},{100,300}})));
+            false, extent={{-100,-200},{100,200}})));
 end ReadAhu;

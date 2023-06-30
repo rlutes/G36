@@ -6,23 +6,17 @@ model TestCase
     heaPum(TSetSup=318.15, QCon_flow_max=((hvac.cor.terHea.Q_flow_nominal + hvac.sou.terHea.Q_flow_nominal
            + hvac.eas.terHea.Q_flow_nominal + hvac.nor.terHea.Q_flow_nominal + hvac.wes.terHea.Q_flow_nominal)
            + hvac.heaCoi.Q_flow_nominal)*0.85),
-    MediumA(extraPropertiesNames={"CO2", "COVID"}),
+    MediumA(extraPropertiesNames={"CO2"}),
     mCor_flow_nominal=ACHCor*VRooCor*conv,
     mSou_flow_nominal=ACHSou*VRooSou*conv,
     mEas_flow_nominal=ACHEas*VRooEas*conv,
     mNor_flow_nominal=ACHNor*VRooNor*conv,
     mWes_flow_nominal=ACHWes*VRooWes*conv,
-    redeclare MultiZoneOfficeSimpleAir.BaseClasses.ASHRAE2006 hvac(
-      THeaOn=294.15,
-      THeaOff=289.15,
-      amb(C={400e-6*Modelica.Media.IdealGases.Common.SingleGasesData.CO2.MM/
-            Modelica.Media.IdealGases.Common.SingleGasesData.Air.MM,0})),
-    redeclare Buildings.Examples.VAVReheat.Validation.BaseClasses.Floor flo(lat=41.98
-          *3.14159/180),
-    chi(
-      TSetSup=279.15,
-      QEva_flow_min=-hvac.mCooWat_flow_nominal*4200*10,
-      dp_nominal=45000),
+    redeclare MultiZoneOfficeSimpleAir.BaseClasses.ASHRAE2006 hvac(amb(C=fill(
+            400e-6*Modelica.Media.IdealGases.Common.SingleGasesData.CO2.MM/
+            Modelica.Media.IdealGases.Common.SingleGasesData.Air.MM, MediumA.nC))),
+    redeclare Buildings.Examples.VAVReheat.Validation.BaseClasses.Floor flo,
+    chi(TSetSup=279.15, QEva_flow_min=-hvac.mCooWat_flow_nominal*4200*10),
     weaDat(computeWetBulbTemperature=true),
     jun(
       tau=60,
@@ -33,15 +27,15 @@ model TestCase
          m_flow_nominal={hvac.mHeaWat_flow_nominal,hvac.mHeaWat_flow_nominal,
           hvac.mHeaWat_flow_nominal}));
 
-  parameter Real ACHCor(unit="1/h")=6
+  parameter Real ACHCor(final unit="1/h")=6
     "Design air change per hour core";
-  parameter Real ACHSou(unit="1/h")=6
+  parameter Real ACHSou(final unit="1/h")=6
     "Design air change per hour south";
-  parameter Real ACHEas(unit="1/h")=9
+  parameter Real ACHEas(final unit="1/h")=9
     "Design air change per hour east";
-  parameter Real ACHNor(unit="1/h")=6
+  parameter Real ACHNor(final unit="1/h")=6
     "Design air change per hour north";
-  parameter Real ACHWes(unit="1/h")=7
+  parameter Real ACHWes(final unit="1/h")=7
     "Design air change per hour west";
 
   Modelica.Blocks.Sources.RealExpression CO2Cor(y=flo.cor.air.vol.C[1])
@@ -64,23 +58,6 @@ model TestCase
   Buildings.Utilities.IO.SignalExchange.WeatherStation weaSta
     "BOPTEST weather station"
     annotation (Placement(transformation(extent={{-70,-30},{-90,-10}})));
-  Modelica.Blocks.Routing.Multiplex5 multiplex5_2
-    annotation (Placement(transformation(extent={{-56,-64},{-36,-44}})));
-  Modelica.Blocks.Sources.RealExpression CovSou(y=flo.sou.air.vol.C[2])
-    "Measure Covid concentration in south zone"
-    annotation (Placement(transformation(extent={{-100,-54},{-80,-34}})));
-  Modelica.Blocks.Sources.RealExpression CovEas(y=flo.eas.air.vol.C[2])
-    "Measure Covid concentration in east zone"
-    annotation (Placement(transformation(extent={{-100,-66},{-80,-46}})));
-  Modelica.Blocks.Sources.RealExpression CovNor(y=flo.nor.air.vol.C[2])
-    "Measure Covid concentration in north zone"
-    annotation (Placement(transformation(extent={{-100,-78},{-80,-58}})));
-  Modelica.Blocks.Sources.RealExpression CovWes(y=flo.wes.air.vol.C[2])
-    "Measure Covid concentration in west zone"
-    annotation (Placement(transformation(extent={{-100,-90},{-80,-70}})));
-  Modelica.Blocks.Sources.RealExpression CovCor(y=flo.cor.air.vol.C[2])
-    "Measure Covid concentration in cor zone"
-    annotation (Placement(transformation(extent={{-100,-102},{-80,-82}})));
 equation
   connect(CO2Cor.y, multiplex5_1.u5[1]) annotation (Line(points={{-79,38},{-76,38},
           {-76,40},{-42,40}}, color={0,0,127}));
@@ -98,19 +75,6 @@ equation
       points={{-70.1,-20.1},{-66,-20.1},{-66,-68},{-10,-68},{-10,-80}},
       color={255,204,51},
       thickness=0.5));
-  connect(CovSou.y, multiplex5_2.u1[1])
-    annotation (Line(points={{-79,-44},{-58,-44}}, color={0,0,127}));
-  connect(CovEas.y, multiplex5_2.u2[1]) annotation (Line(points={{-79,-56},{-64,
-          -56},{-64,-49},{-58,-49}}, color={0,0,127}));
-  connect(CovNor.y, multiplex5_2.u3[1]) annotation (Line(points={{-79,-68},{-68,
-          -68},{-68,-54},{-58,-54}}, color={0,0,127}));
-  connect(CovWes.y, multiplex5_2.u4[1]) annotation (Line(points={{-79,-80},{-64,
-          -80},{-64,-59},{-58,-59}}, color={0,0,127}));
-  connect(CovCor.y, multiplex5_2.u5[1])
-    annotation (Line(points={{-79,-92},{-58,-92},{-58,-64}}, color={0,0,127}));
-  connect(multiplex5_2.y, hvac.CovRoo) annotation (Line(points={{-35,-54},{-30,
-          -54},{-30,-32},{-54,-32},{-54,28},{-48.75,28},{-48.75,10.6111}},
-        color={0,0,127}));
   annotation (
     Documentation(info="<html>
 <p>
@@ -750,6 +714,196 @@ The model outputs are:
 <code>weaSta_reaWeaWinSpe_y</code> [m/s] [min=None, max=None]: Wind speed measurement
 </li>
 </ul>
+<h4>Forecasts</h4>
+The model forecasts are:
+<ul>
+<li>
+<code>EmissionsElectricPower</code> [kgCO2/kWh]: Kilograms of carbon dioxide to produce 1 kWh of electricity
+</li>
+<li>
+<code>HDifHor</code> [W/m2]: Horizontal diffuse solar radiation
+</li>
+<li>
+<code>HDirNor</code> [W/m2]: Direct normal radiation
+</li>
+<li>
+<code>HGloHor</code> [W/m2]: Horizontal global radiation
+</li>
+<li>
+<code>HHorIR</code> [W/m2]: Horizontal infrared irradiation
+</li>
+<li>
+<code>InternalGainsCon[cor]</code> [W]: Convective internal gains of zone
+</li>
+<li>
+<code>InternalGainsCon[eas]</code> [W]: Convective internal gains of zone
+</li>
+<li>
+<code>InternalGainsCon[nor]</code> [W]: Convective internal gains of zone
+</li>
+<li>
+<code>InternalGainsCon[sou]</code> [W]: Convective internal gains of zone
+</li>
+<li>
+<code>InternalGainsCon[wes]</code> [W]: Convective internal gains of zone
+</li>
+<li>
+<code>InternalGainsLat[cor]</code> [W]: Latent internal gains of zone
+</li>
+<li>
+<code>InternalGainsLat[eas]</code> [W]: Latent internal gains of zone
+</li>
+<li>
+<code>InternalGainsLat[nor]</code> [W]: Latent internal gains of zone
+</li>
+<li>
+<code>InternalGainsLat[sou]</code> [W]: Latent internal gains of zone
+</li>
+<li>
+<code>InternalGainsLat[wes]</code> [W]: Latent internal gains of zone
+</li>
+<li>
+<code>InternalGainsRad[cor]</code> [W]: Radiative internal gains of zone
+</li>
+<li>
+<code>InternalGainsRad[eas]</code> [W]: Radiative internal gains of zone
+</li>
+<li>
+<code>InternalGainsRad[nor]</code> [W]: Radiative internal gains of zone
+</li>
+<li>
+<code>InternalGainsRad[sou]</code> [W]: Radiative internal gains of zone
+</li>
+<li>
+<code>InternalGainsRad[wes]</code> [W]: Radiative internal gains of zone
+</li>
+<li>
+<code>LowerSetp[cor]</code> [K]: Lower temperature set point for thermal comfort of zone
+</li>
+<li>
+<code>LowerSetp[eas]</code> [K]: Lower temperature set point for thermal comfort of zone
+</li>
+<li>
+<code>LowerSetp[nor]</code> [K]: Lower temperature set point for thermal comfort of zone
+</li>
+<li>
+<code>LowerSetp[sou]</code> [K]: Lower temperature set point for thermal comfort of zone
+</li>
+<li>
+<code>LowerSetp[wes]</code> [K]: Lower temperature set point for thermal comfort of zone
+</li>
+<li>
+<code>Occupancy[cor]</code> [number of people]: Number of occupants of zone
+</li>
+<li>
+<code>Occupancy[eas]</code> [number of people]: Number of occupants of zone
+</li>
+<li>
+<code>Occupancy[nor]</code> [number of people]: Number of occupants of zone
+</li>
+<li>
+<code>Occupancy[sou]</code> [number of people]: Number of occupants of zone
+</li>
+<li>
+<code>Occupancy[wes]</code> [number of people]: Number of occupants of zone
+</li>
+<li>
+<code>PriceElectricPowerConstant</code> [($/Euro)/kWh]: Completely constant electricity price
+</li>
+<li>
+<code>PriceElectricPowerDynamic</code> [($/Euro)/kWh]: Electricity price for a day/night tariff
+</li>
+<li>
+<code>PriceElectricPowerHighlyDynamic</code> [($/Euro)/kWh]: Spot electricity price
+</li>
+<li>
+<code>TBlaSky</code> [K]: Black Sky temperature
+</li>
+<li>
+<code>TDewPoi</code> [K]: Dew point temperature
+</li>
+<li>
+<code>TDryBul</code> [K]: Dry bulb temperature at ground level
+</li>
+<li>
+<code>TWetBul</code> [K]: Wet bulb temperature
+</li>
+<li>
+<code>UpperCO2[cor]</code> [ppm]: Upper CO2 set point for indoor air quality of zone
+</li>
+<li>
+<code>UpperCO2[eas]</code> [ppm]: Upper CO2 set point for indoor air quality of zone
+</li>
+<li>
+<code>UpperCO2[nor]</code> [ppm]: Upper CO2 set point for indoor air quality of zone
+</li>
+<li>
+<code>UpperCO2[sou]</code> [ppm]: Upper CO2 set point for indoor air quality of zone
+</li>
+<li>
+<code>UpperCO2[wes]</code> [ppm]: Upper CO2 set point for indoor air quality of zone
+</li>
+<li>
+<code>UpperSetp[cor]</code> [K]: Upper temperature set point for thermal comfort of zone
+</li>
+<li>
+<code>UpperSetp[eas]</code> [K]: Upper temperature set point for thermal comfort of zone
+</li>
+<li>
+<code>UpperSetp[nor]</code> [K]: Upper temperature set point for thermal comfort of zone
+</li>
+<li>
+<code>UpperSetp[sou]</code> [K]: Upper temperature set point for thermal comfort of zone
+</li>
+<li>
+<code>UpperSetp[wes]</code> [K]: Upper temperature set point for thermal comfort of zone
+</li>
+<li>
+<code>ceiHei</code> [m]: Ceiling height
+</li>
+<li>
+<code>cloTim</code> [s]: One-based day number in seconds
+</li>
+<li>
+<code>lat</code> [rad]: Latitude of the location
+</li>
+<li>
+<code>lon</code> [rad]: Longitude of the location
+</li>
+<li>
+<code>nOpa</code> [1]: Opaque sky cover [0, 1]
+</li>
+<li>
+<code>nTot</code> [1]: Total sky Cover [0, 1]
+</li>
+<li>
+<code>pAtm</code> [Pa]: Atmospheric pressure
+</li>
+<li>
+<code>relHum</code> [1]: Relative Humidity
+</li>
+<li>
+<code>solAlt</code> [rad]: Altitude angel
+</li>
+<li>
+<code>solDec</code> [rad]: Declination angle
+</li>
+<li>
+<code>solHouAng</code> [rad]: Solar hour angle.
+</li>
+<li>
+<code>solTim</code> [s]: Solar time
+</li>
+<li>
+<code>solZen</code> [rad]: Zenith angle
+</li>
+<li>
+<code>winDir</code> [rad]: Wind direction
+</li>
+<li>
+<code>winSpe</code> [m/s]: Wind speed
+</li>
+</ul>
 <h3>Additional System Design</h3>
 <h4>Lighting</h4>
 <p>
@@ -988,6 +1142,11 @@ For reference, see https://www.eia.gov/electricity/state/illinois/
 </html>", revisions="<html>
 <ul>
 <li>
+August 25, 2022, by David Blum:<br/>
+Add forecast point documentation.
+This is for BOPTEST <a href=\"https://github.com/ibpsa/project1-boptest/issues/356\">issue #356</a>.
+</li>
+<li>
 May 25, 2022, by David Blum:<br/>
 Update documentation to include floor plan diagram and better description of
 upper and lower boundary conditions.
@@ -1106,8 +1265,9 @@ This is for
           "modelica://MultiZoneOfficeSimpleAir/Resources/Scripts/Dymola/TestCases/TestCase.mos"
         "Simulate and plot"),
     experiment(
-      StopTime=86400,
-      Tolerance=1e-07,
+      StopTime=31536000,
+      Interval=900,
+      Tolerance=1e-06,
       __Dymola_Algorithm="Cvode"),
     Icon(coordinateSystem(extent={{-100,-100},{100,100}})));
 end TestCase;

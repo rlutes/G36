@@ -3,7 +3,6 @@ APP_PATH=/home/developer
 
 COMMAND_RUN=docker run \
 	  --name ${IMG_NAME} \
-          --network=host \
 	  --rm \
  	  -it \
 	  -p 127.0.0.1:5000:5000
@@ -18,7 +17,7 @@ COMMAND_COPY=docker cp ./testcases/${TESTCASE}/models/wrapped.fmu ${IMG_NAME}:${
       docker cp ./kpis ${IMG_NAME}:${APP_PATH}/kpis/
 
 build:
-	docker build --no-cache --rm --network=host -t ${IMG_NAME} -f Dockerfile . && \
+	docker build --no-cache --rm -t ${IMG_NAME} -f Dockerfile . && \
 	echo WARNING: Use of make for building and running BOPTEST test cases is deprecated.  Please use docker-compose as outlined in the README.md.
 
 remove-image:

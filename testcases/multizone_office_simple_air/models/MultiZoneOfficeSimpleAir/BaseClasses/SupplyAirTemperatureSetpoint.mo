@@ -2,7 +2,7 @@ within MultiZoneOfficeSimpleAir.BaseClasses;
 block SupplyAirTemperatureSetpoint
   "Block computing the supply air temperature set point based on the operation mode"
   extends Modelica.Blocks.Icons.Block;
-  Buildings.Examples.VAVReheat.Controls.ControlBus controlBus
+  Buildings.Examples.VAVReheat.BaseClasses.Controls.ControlBus controlBus
     annotation (Placement(transformation(extent={{-10,-90},{10,-70}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealOutput TSet(
     final unit="K",

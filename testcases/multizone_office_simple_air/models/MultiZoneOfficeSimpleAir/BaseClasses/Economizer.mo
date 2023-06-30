@@ -1,6 +1,6 @@
 within MultiZoneOfficeSimpleAir.BaseClasses;
 block Economizer "Controller for economizer"
-  import Buildings.Examples.VAVReheat.Controls.OperationModes;
+  import Buildings.Examples.VAVReheat.BaseClasses.Controls.OperationModes;
   parameter Boolean have_reset = false
     "Set to true to reset the outdoor air damper controllers with the enable signal"
     annotation(Evaluate=true);
@@ -21,7 +21,7 @@ block Economizer "Controller for economizer"
        iconTransformation(extent={{-40,-40},{40,40}},
         rotation=90,
         origin={0,-140})));
-  Buildings.Examples.VAVReheat.Controls.ControlBus controlBus
+  Buildings.Examples.VAVReheat.BaseClasses.Controls.ControlBus controlBus
     "Control bus" annotation (Placement(transformation(extent={{30,-88},{50,-68}}),
         iconTransformation(extent={{30,-88},{50,-68}})));
   Modelica.Blocks.Interfaces.RealInput uOATSup
@@ -76,13 +76,13 @@ block Economizer "Controller for economizer"
     annotation (Placement(transformation(extent={{-30,110},{-10,130}})));
   Modelica.Blocks.Math.Feedback feedback
     annotation (Placement(transformation(extent={{-90,110},{-70,130}})));
-  Buildings.Controls.OBC.CDL.Logical.Switch swiOA
+  Buildings.Controls.OBC.CDL.Continuous.Switch swiOA
     "Switch to close outdoor air damper"
     annotation (Placement(transformation(extent={{90,110},{110,130}})));
   Modelica.Blocks.Sources.Constant one(k=1) if not have_frePro
     "Fill value in case freeze protection is disabled"
     annotation (Placement(transformation(extent={{-60,10},{-40,30}})));
-  Buildings.Controls.OBC.CDL.Logical.Switch swiModClo
+  Buildings.Controls.OBC.CDL.Continuous.Switch swiModClo
     "Switch between modulating or closing outdoor air damper"
     annotation (Placement(transformation(extent={{130,-10},{150,10}})));
   Buildings.Controls.OBC.CDL.Continuous.Max maxOutDam
@@ -96,23 +96,6 @@ block Economizer "Controller for economizer"
   Modelica.Blocks.Sources.Constant minSpe(k=0.44)
     "Minimum fan speed for calibration"
     annotation (Placement(transformation(extent={{-60,-20},{-40,0}})));
-  Buildings.Controls.OBC.CDL.Continuous.PID yOAMin(
-    controllerType=controllerType,
-    k=k,
-    Ti=Ti,
-    Td=60,
-    yMax=1,
-    yMin=0,
-    reverseActing=false) if have_frePro
-    "Controller of outdoor damper to track minimun outdoor airflow setpoint"
-    annotation (Placement(transformation(extent={{24,-50},{44,-30}})));
-  Modelica.Blocks.Interfaces.RealInput minOA_set
-    "Minimum outdoor airflow setpoint" annotation (Placement(transformation(
-          extent={{-140,-20},{-100,20}}), iconTransformation(extent={{-138,120},
-            {-98,160}})));
-  Modelica.Blocks.Interfaces.RealInput OA_flow "Measured outdoor airflow"
-    annotation (Placement(transformation(extent={{-140,-52},{-100,-12}}),
-        iconTransformation(extent={{-140,-40},{-100,0}})));
 equation
   connect(yOATFre.y, minFrePro.u1)
     annotation (Line(points={{-8,80},{0,80},{0,20},{78,20}}, color={0,0,127}));
@@ -134,6 +117,8 @@ equation
           {88,112}}, color={0,0,127}));
   connect(hysLoc.y, swiOA.u2)
     annotation (Line(points={{-9,120},{88,120}}, color={255,0,255}));
+  connect(uOATSup, swiOA.u1) annotation (Line(points={{-120,160},{60,160},{60,128},
+          {88,128}}, color={0,0,127}));
 
   connect(one.y, minFrePro.u1)
     annotation (Line(points={{-39,20},{78,20}}, color={0,0,127}));
@@ -156,6 +141,8 @@ equation
           {114,8},{128,8}}, color={0,0,127}));
   connect(maxOutDam.y, minFrePro.u2)
     annotation (Line(points={{62,0},{72,0},{72,8},{78,8}}, color={0,0,127}));
+  connect(lin.y, maxOutDam.u2) annotation (Line(points={{12,-30},{26,-30},{26,-6},
+          {38,-6}}, color={0,0,127}));
   connect(lin.u, yFan) annotation (Line(points={{-12,-30},{-20,-30},{-20,-60},{-120,
           -60}}, color={0,0,127}));
   connect(minOADminSpe.y, lin.f1) annotation (Line(points={{-39,-40},{-24,-40},{
@@ -166,15 +153,6 @@ equation
           20},{78,20}}, color={0,0,127}));
   connect(minSpe.y, lin.x1) annotation (Line(points={{-39,-10},{-16,-10},{-16,-22},
           {-12,-22}}, color={0,0,127}));
-  connect(uOATSup, swiOA.u1) annotation (Line(points={{-120,160},{26,160},{26,
-          128},{88,128}}, color={0,0,127}));
-  connect(yOAMin.y, maxOutDam.u2) annotation (Line(points={{46,-40},{52,-40},{
-          52,-14},{32,-14},{32,-6},{38,-6}}, color={0,0,127}));
-  connect(OA_flow, yOAMin.u_s) annotation (Line(points={{-120,-32},{-66,-32},{
-          -66,-54},{14,-54},{14,-40},{22,-40}}, color={0,0,127}));
-  connect(minOA_set, yOAMin.u_m) annotation (Line(points={{-120,0},{-64,0},{-64,
-          4},{18,4},{18,-42},{16,-42},{16,-58},{34,-58},{34,-52}}, color={0,0,
-          127}));
   annotation (defaultComponentName="conEco",
     Diagram(coordinateSystem(preserveAspectRatio=true, extent={{-100,-100},{200,
             200}})),

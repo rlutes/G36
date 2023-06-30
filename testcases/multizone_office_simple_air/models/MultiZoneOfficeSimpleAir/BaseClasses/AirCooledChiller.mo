@@ -5,7 +5,6 @@ model AirCooledChiller "Air cooled chiller model (York YCAL0033EE)"
   Buildings.Fluid.Chillers.ElectricEIR chi(
     redeclare package Medium1 = MediumA,
     redeclare package Medium2 = MediumW,
-    m2_flow_nominal=-(10000/10)*QEva_flow_min/(4200*10),
     dp1_nominal=0,
     dp2_nominal=0,
     per=Buildings.Fluid.Chillers.Data.ElectricEIR.ElectricEIRChiller_York_YCAL0033EE_101kW_3_1COP_AirCooled())
@@ -45,8 +44,8 @@ model AirCooledChiller "Air cooled chiller model (York YCAL0033EE)"
     "Maximum heat flow rate for cooling (negative)";
   parameter Modelica.SIunits.PressureDifference dp_nominal=45000
     "Nominal pump head";
-  Buildings.Fluid.Sensors.TemperatureTwoPort senTemRet(redeclare package Medium
-      = MediumW, m_flow_nominal=chi.m2_flow_nominal)
+  Buildings.Fluid.Sensors.TemperatureTwoPort senTemRet(redeclare package Medium =
+        MediumW, m_flow_nominal=chi.m2_flow_nominal)
     "Return water tempearture sensor"
     annotation (Placement(transformation(extent={{80,10},{60,-10}})));
   Buildings.Utilities.IO.SignalExchange.Read reaTRet(
@@ -83,7 +82,7 @@ model AirCooledChiller "Air cooled chiller model (York YCAL0033EE)"
                                               "Chilled water pump"
     annotation (Placement(transformation(extent={{-60,80},{-40,100}})));
   Buildings.Fluid.Sources.Boundary_pT refPres(redeclare package Medium =
-        MediumW, nPorts=2) "Reference pressure"
+        MediumW, nPorts=1) "Reference pressure"
     annotation (Placement(transformation(extent={{-80,-80},{-60,-60}})));
   Buildings.Utilities.IO.SignalExchange.Read reaTSup(
     description="Supply water temperature of chiller",
@@ -100,19 +99,14 @@ model AirCooledChiller "Air cooled chiller model (York YCAL0033EE)"
   Buildings.Utilities.IO.SignalExchange.Read reaPPumDis(
     description="Electric power consumed by chilled water distribution pump",
     KPIs=Buildings.Utilities.IO.SignalExchange.SignalTypes.SignalsForKPIs.ElectricPower,
+
     y(unit="W")) "Electric power consumed by distribution pump"
     annotation (Placement(transformation(extent={{76,70},{96,90}})));
 
-  ReadWatSys readWatSys
-    annotation (Placement(transformation(extent={{22,-64},{42,-42}})));
-  Buildings.Fluid.Sensors.RelativePressure dpCHW(redeclare package Medium = MediumW)
-    "CHW pump static discharge pressure" annotation (Placement(transformation(
-        extent={{10,10},{-10,-10}},
-        rotation=180,
-        origin={-14,-44})));
-  WriteWatSys writeWatSys
-    annotation (Placement(transformation(extent={{16,46},{36,68}})));
 equation
+  connect(TSetChws.y, chi.TSet) annotation (Line(points={{39,90},{10,90},{10,-12},
+          {18,-12},{18,-13}},
+                           color={0,0,127}));
   connect(chi.port_b1, conSin.ports[1]) annotation (Line(points={{40,-4},{42,-4},
           {42,30},{80,30}}, color={0,127,255}));
   connect(conSou.weaBus, weaBus) annotation (Line(
@@ -144,8 +138,10 @@ equation
     annotation (Line(points={{-10,-20},{-20,-20}}, color={0,127,255}));
   connect(pum.port_b, senSupFlo.port_a) annotation (Line(points={{-40,-20},{-60,
           -20},{-60,0},{-70,0}}, color={0,127,255}));
+  connect(dp.y, pum.dp_in)
+    annotation (Line(points={{-39,90},{-30,90},{-30,-8}}, color={0,0,127}));
   connect(refPres.ports[1], senSupFlo.port_a)
-    annotation (Line(points={{-60,-68},{-60,0},{-70,0}}, color={0,127,255}));
+    annotation (Line(points={{-60,-70},{-60,0},{-70,0}}, color={0,127,255}));
   connect(senTemSup.T, reaTSup.u)
     annotation (Line(points={{0,-31},{0,-80},{58,-80}}, color={0,0,127}));
   connect(on.y, chi.on) annotation (Line(points={{1,70},{8,70},{8,-7},{18,-7}},
@@ -156,26 +152,6 @@ equation
     annotation (Line(points={{97,80},{110,80}}, color={0,0,127}));
   connect(reaPPumDis.u, pum.P) annotation (Line(points={{74,80},{68,80},{68,42},
           {-44,42},{-44,-11},{-41,-11}}, color={0,0,127}));
-  connect(senTemSup.T, readWatSys.TW_in)
-    annotation (Line(points={{0,-31},{0,-60},{19,-60}}, color={0,0,127}));
-  connect(pum.port_a, dpCHW.port_a) annotation (Line(points={{-20,-20},{-18,-20},
-          {-18,-24},{-16,-24},{-16,-32},{-28,-32},{-28,-44},{-24,-44}}, color={0,
-          127,255}));
-  connect(dpCHW.port_b, refPres.ports[2]) annotation (Line(points={{-4,-44},{2,-44},
-          {2,-70},{-14,-70},{-14,-84},{-54,-84},{-54,-72},{-60,-72}}, color={0,127,
-          255}));
-  connect(dpCHW.p_rel, readWatSys.dp_in) annotation (Line(points={{-14,-53},{-14,
-          -58},{8,-58},{8,-47.8},{19,-47.8}}, color={0,0,127}));
-  connect(dp.y, writeWatSys.dp_set_in) annotation (Line(points={{-39,90},{-24,
-          90},{-24,46},{13,46},{13,51.8}}, color={0,0,127}));
-  connect(writeWatSys.dp_set_out, pum.dp_in) annotation (Line(points={{36,51.8},
-          {36,50},{40,50},{40,40},{6,40},{6,-6},{-24,-6},{-24,-2},{-30,-2},{-30,
-          -8}}, color={0,0,127}));
-  connect(TSetChws.y, writeWatSys.TW_set_in) annotation (Line(points={{39,90},{
-          4,90},{4,68},{6,68},{6,61.8},{13,61.8}}, color={0,0,127}));
-  connect(writeWatSys.TW_set_out, chi.TSet) annotation (Line(points={{36,61.8},
-          {36,60},{44,60},{44,-2},{46,-2},{46,-24},{18,-24},{18,-13}}, color={0,
-          0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
         coordinateSystem(preserveAspectRatio=false)));
 end AirCooledChiller;

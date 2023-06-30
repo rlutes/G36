@@ -35,7 +35,7 @@ model ModeSelector "Finite State Machine for the operational modes"
     annotation (Placement(transformation(extent={{50,70},{30,90}})));
   inner Modelica.StateGraph.StateGraphRoot stateGraphRoot
     annotation (Placement(transformation(extent={{160,160},{180,180}})));
-  Buildings.Examples.VAVReheat.Controls.ControlBus cb annotation (
+  Buildings.Examples.VAVReheat.BaseClasses.Controls.ControlBus cb annotation (
       Placement(transformation(extent={{-168,130},{-148,150}}),
         iconTransformation(extent={{-176,124},{-124,176}})));
   State                                                   morWarUp(
@@ -46,7 +46,7 @@ model ModeSelector "Finite State Machine for the operational modes"
 
   Modelica.StateGraph.TransitionWithSignal t6(enableTimer=true, waitTime=60)
     annotation (Placement(transformation(extent={{-76,-100},{-56,-80}})));
-  Modelica.Blocks.Logical.LessEqualThreshold occThrSho(threshold=0)
+  Modelica.Blocks.Logical.LessEqualThreshold occThrSho(threshold=1800)
     "Signal to allow transition into morning warmup"
     annotation (Placement(transformation(extent={{-140,-190},{-120,-170}})));
   Modelica.StateGraph.TransitionWithSignal t5
@@ -82,7 +82,7 @@ model ModeSelector "Finite State Machine for the operational modes"
     y=occThrSho.y and (TRooAve.y < TRooSetHeaOcc))
     "Test that outputs true if room temperature is below occupied heating and system should be switched on soon"
     annotation (Placement(transformation(extent={{-204,-226},{-100,-192}})));
-  Buildings.Examples.VAVReheat.Controls.PreCoolingStarter preCooSta(
+  Buildings.Examples.VAVReheat.BaseClasses.Controls.PreCoolingStarter preCooSta(
       TRooSetCooOcc=TRooSetCooOcc) "Model to start pre-cooling"
     annotation (Placement(transformation(extent={{-140,-160},{-120,-140}})));
   Modelica.StateGraph.TransitionWithSignal t9

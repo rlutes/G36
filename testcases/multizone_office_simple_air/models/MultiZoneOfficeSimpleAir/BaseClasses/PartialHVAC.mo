@@ -229,69 +229,65 @@ partial model PartialHVAC
   Buildings.Examples.VAVReheat.BaseClasses.VAVReheatBox cor(
     redeclare package MediumA = MediumA,
     redeclare package MediumW = MediumW,
-    mCooAir_flow_nominal=mCor_flow_nominal,
-    mHeaAir_flow_nominal=0.3*mCor_flow_nominal,
+    m_flow_nominal=mCor_flow_nominal,
     VRoo=VRooCor,
     allowFlowReversal=allowFlowReversal,
-    THeaWatInl_nominal=THotWatInl_nominal,
-    THeaWatOut_nominal=THotWatInl_nominal-10,
-    THeaAirInl_nominal=285.15,
-    THeaAirDis_nominal=305.15,
+    ratVFloHea=ratVFloHea,
+    THotWatInl_nominal=THotWatInl_nominal,
+    THotWatOut_nominal=THotWatInl_nominal-10,
+    TAirInl_nominal=12+273.15,
     QHea_flow_nominal=mCor_flow_nominal*ratVFloHea*cpAir*(32-12))
     "Zone for core of building"
     annotation (Placement(transformation(extent={{570,22},{610,62}})));
   Buildings.Examples.VAVReheat.BaseClasses.VAVReheatBox sou(
     redeclare package MediumA = MediumA,
     redeclare package MediumW = MediumW,
-    mCooAir_flow_nominal=mSou_flow_nominal,
-    mHeaAir_flow_nominal=0.3*mSou_flow_nominal,
-    THeaAirDis_nominal=305.15,
+    m_flow_nominal=mSou_flow_nominal,
     VRoo=VRooSou,
     allowFlowReversal=allowFlowReversal,
-    THeaWatInl_nominal=THotWatInl_nominal,
-    THeaWatOut_nominal=THotWatInl_nominal-10,
-    THeaAirInl_nominal=285.15,
+    ratVFloHea=ratVFloHea,
+    THotWatInl_nominal=THotWatInl_nominal,
+    THotWatOut_nominal=THotWatInl_nominal-10,
+    TAirInl_nominal=12+273.15,
     QHea_flow_nominal=mSou_flow_nominal*ratVFloHea*cpAir*(32-12))
     "South-facing thermal zone"
     annotation (Placement(transformation(extent={{750,20},{790,60}})));
   Buildings.Examples.VAVReheat.BaseClasses.VAVReheatBox eas(
     redeclare package MediumA = MediumA,
     redeclare package MediumW = MediumW,
-    mCooAir_flow_nominal=mEas_flow_nominal,
-    mHeaAir_flow_nominal=0.3*mEas_flow_nominal,
-    THeaAirDis_nominal=305.15,
+    m_flow_nominal=mEas_flow_nominal,
     VRoo=VRooEas,
     allowFlowReversal=allowFlowReversal,
-    THeaWatOut_nominal=THotWatInl_nominal-10,
-    THeaAirInl_nominal=285.15,
+    ratVFloHea=ratVFloHea,
+    THotWatInl_nominal=THotWatInl_nominal,
+    THotWatOut_nominal=THotWatInl_nominal-10,
+    TAirInl_nominal=12+273.15,
     QHea_flow_nominal=mEas_flow_nominal*ratVFloHea*cpAir*(32-12))
     "East-facing thermal zone"
     annotation (Placement(transformation(extent={{930,20},{970,60}})));
   Buildings.Examples.VAVReheat.BaseClasses.VAVReheatBox nor(
     redeclare package MediumA = MediumA,
     redeclare package MediumW = MediumW,
-    mCooAir_flow_nominal=mNor_flow_nominal,
-    mHeaAir_flow_nominal=0.3*mNor_flow_nominal,
-    THeaAirDis_nominal=305.15,
+    m_flow_nominal=mNor_flow_nominal,
     VRoo=VRooNor,
     allowFlowReversal=allowFlowReversal,
-    THeaWatInl_nominal=THotWatInl_nominal,
-    THeaWatOut_nominal=THotWatInl_nominal-10,
-    THeaAirInl_nominal=285.15,
+    ratVFloHea=ratVFloHea,
+    THotWatInl_nominal=THotWatInl_nominal,
+    THotWatOut_nominal=THotWatInl_nominal-10,
+    TAirInl_nominal=12+273.15,
     QHea_flow_nominal=mNor_flow_nominal*ratVFloHea*cpAir*(32-12))
     "North-facing thermal zone"
     annotation (Placement(transformation(extent={{1090,20},{1130,60}})));
   Buildings.Examples.VAVReheat.BaseClasses.VAVReheatBox wes(
     redeclare package MediumA = MediumA,
     redeclare package MediumW = MediumW,
-    mCooAir_flow_nominal=mWes_flow_nominal,
-    mHeaAir_flow_nominal=0.3*mCor_flow_nominal,
-    THeaAirDis_nominal=305.15,
+    m_flow_nominal=mWes_flow_nominal,
     VRoo=VRooWes,
     allowFlowReversal=allowFlowReversal,
-    THeaWatInl_nominal=THotWatInl_nominal,
-    THeaWatOut_nominal=THotWatInl_nominal-10,
-    THeaAirInl_nominal=285.15,
+    ratVFloHea=ratVFloHea,
+    THotWatInl_nominal=THotWatInl_nominal,
+    THotWatOut_nominal=THotWatInl_nominal-10,
+    TAirInl_nominal=12+273.15,
     QHea_flow_nominal=mWes_flow_nominal*ratVFloHea*cpAir*(32-12))
     "West-facing thermal zone"
     annotation (Placement(transformation(extent={{1290,20},{1330,60}})));
@@ -623,8 +619,6 @@ partial model PartialHVAC
         extent={{-10,-10},{10,10}},
         rotation=90,
         origin={128,-90})));
-  HVACFilter filt(redeclare package Medium = MediumA, m_flow_nominal=m_flow_nominal, dp_nominal=162)
-    annotation (Placement(transformation(extent={{62,-50},{82,-30}})));
 protected
   constant Modelica.SIunits.SpecificHeatCapacity cpAir=
     Buildings.Utilities.Psychrometrics.Constants.cpAir
@@ -781,6 +775,10 @@ equation
       pattern=LinePattern.Dot));
   connect(senRetFlo.port_b, TRet.port_a) annotation (Line(points={{340,140},{
           226,140},{110,140}}, color={0,127,255}));
+  connect(TMix.port_b, heaCoi.port_a2) annotation (Line(
+      points={{50,-40},{98,-40}},
+      color={0,127,255},
+      thickness=0.5));
   connect(heaCoi.port_b2, cooCoi.port_a2)
     annotation (Line(
       points={{118,-40},{190,-40}},
@@ -875,10 +873,6 @@ equation
           1060,40},{1060,-180},{460,-180},{460,-300}}, color={0,127,255}));
   connect(wes.port_aHotWat, portHeaTerSup) annotation (Line(points={{1290,40},{
           1274,40},{1274,-180},{460,-180},{460,-300}}, color={0,127,255}));
-  connect(TMix.port_b, filt.port_a)
-    annotation (Line(points={{50,-40},{62,-40}}, color={0,127,255}));
-  connect(filt.port_b, heaCoi.port_a2)
-    annotation (Line(points={{82,-40},{98,-40}}, color={0,127,255}));
   annotation (
   Diagram(
     coordinateSystem(

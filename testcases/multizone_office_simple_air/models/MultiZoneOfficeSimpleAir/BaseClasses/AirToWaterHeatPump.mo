@@ -80,7 +80,7 @@ model AirToWaterHeatPump "Air to water heat pump model"
         rotation=0,
         origin={0,-20})));
   Buildings.Fluid.Sources.Boundary_pT refPres(redeclare package Medium =
-        MediumW, nPorts=2) "Reference pressure"
+        MediumW, nPorts=1) "Reference pressure"
     annotation (Placement(transformation(extent={{-80,-80},{-60,-60}})));
   Modelica.Blocks.Sources.Constant dp(k=dp_nominal)
                                               "Chilled water pump"
@@ -94,22 +94,13 @@ model AirToWaterHeatPump "Air to water heat pump model"
   Buildings.Utilities.IO.SignalExchange.Read reaPPumDis(
     description="Electric power consumed by hot water distribution pump",
     KPIs=Buildings.Utilities.IO.SignalExchange.SignalTypes.SignalsForKPIs.ElectricPower,
+
     y(unit="W")) "Electric power consumed by distribution pump"
     annotation (Placement(transformation(extent={{76,70},{96,90}})));
 
   Modelica.Blocks.Interfaces.RealOutput PPum
     "Electric power consumed by distribution pump"
     annotation (Placement(transformation(extent={{100,70},{120,90}})));
-  ReadWatSys readWatSys
-    annotation (Placement(transformation(extent={{22,-56},{42,-34}})));
-  Buildings.Fluid.Sensors.RelativePressure dpCHW(redeclare package Medium =
-        MediumW)
-    "CHW pump static discharge pressure" annotation (Placement(transformation(
-        extent={{10,10},{-10,-10}},
-        rotation=180,
-        origin={-16,-46})));
-  WriteWatSys writeWatSys
-    annotation (Placement(transformation(extent={{-6,48},{14,70}})));
 equation
   connect(conSou.weaBus, weaBus) annotation (Line(
       points={{-80,30.2},{-80,100},{-100,100}},
@@ -121,6 +112,8 @@ equation
       horizontalAlignment=TextAlignment.Right));
   connect(reaPHeaPum.y, PHeaPum)
     annotation (Line(points={{97,100},{110,100}}, color={0,0,127}));
+  connect(TSetHws.y, heaPum.TSet) annotation (Line(points={{39,90},{30,90},{30,40},
+          {52,40},{52,-3},{42,-3}}, color={0,0,127}));
   connect(conSou.ports[1], heaPum.port_a2) annotation (Line(points={{-60,30},{0,
           30},{0,12},{20,12}}, color={0,127,255}));
   connect(heaPum.port_b2, conSin.ports[1]) annotation (Line(points={{40,12},{60,
@@ -145,32 +138,15 @@ equation
   connect(pum.port_b, senSupFlo.port_a) annotation (Line(points={{-40,-20},{-60,
           -20},{-60,0},{-70,0}}, color={0,127,255}));
   connect(refPres.ports[1], senSupFlo.port_a)
-    annotation (Line(points={{-60,-68},{-60,0},{-70,0}}, color={0,127,255}));
+    annotation (Line(points={{-60,-70},{-60,0},{-70,0}}, color={0,127,255}));
+  connect(dp.y, pum.dp_in)
+    annotation (Line(points={{-39,90},{-30,90},{-30,-8}}, color={0,0,127}));
   connect(senTemSup.T, reaTSup.u)
     annotation (Line(points={{0,-31},{0,-80},{58,-80}}, color={0,0,127}));
   connect(reaPPumDis.y, PPum) annotation (Line(points={{97,80},{100.5,80},{
           100.5,80},{110,80}}, color={0,0,127}));
   connect(reaPPumDis.u, pum.P) annotation (Line(points={{74,80},{66,80},{66,34},
           {-41,34},{-41,-11}}, color={0,0,127}));
-  connect(readWatSys.TW_in, senTemSup.T)
-    annotation (Line(points={{19,-52},{0,-52},{0,-31}}, color={0,0,127}));
-  connect(pum.port_a, dpCHW.port_a) annotation (Line(points={{-20,-20},{-18,-20},
-          {-18,-24},{-16,-24},{-16,-34},{-30,-34},{-30,-46},{-26,-46}}, color={
-          0,127,255}));
-  connect(dpCHW.port_b, refPres.ports[2]) annotation (Line(points={{-6,-46},{-2,
-          -46},{-2,-86},{-52,-86},{-52,-72},{-60,-72}}, color={0,127,255}));
-  connect(dpCHW.p_rel, readWatSys.dp_in) annotation (Line(points={{-16,-55},{
-          -16,-60},{30,-60},{30,-30},{2,-30},{2,-34},{19,-34},{19,-39.8}},
-        color={0,0,127}));
-  connect(TSetHws.y, writeWatSys.TW_set_in) annotation (Line(points={{39,90},{
-          14,90},{14,68},{-9,68},{-9,63.8}}, color={0,0,127}));
-  connect(writeWatSys.TW_set_out, heaPum.TSet) annotation (Line(points={{14,
-          63.8},{14,62},{18,62},{18,18},{44,18},{44,4},{46,4},{46,-3},{42,-3}},
-        color={0,0,127}));
-  connect(dp.y, writeWatSys.dp_set_in) annotation (Line(points={{-39,90},{-16,
-          90},{-16,53.8},{-9,53.8}}, color={0,0,127}));
-  connect(writeWatSys.dp_set_out, pum.dp_in) annotation (Line(points={{14,53.8},
-          {14,52},{16,52},{16,26},{-30,26},{-30,-8}}, color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
         coordinateSystem(preserveAspectRatio=false)));
 end AirToWaterHeatPump;

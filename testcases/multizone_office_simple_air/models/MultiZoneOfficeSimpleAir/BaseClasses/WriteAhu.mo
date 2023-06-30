@@ -108,16 +108,6 @@ model WriteAhu "Collection of AHU overwrite points for BOPTEST"
   Modelica.Blocks.Interfaces.RealOutput yPumCoo_out
     "Cooling coil pump control signal"
     annotation (Placement(transformation(extent={{100,-10},{120,10}})));
-  Buildings.Utilities.IO.SignalExchange.Overwrite VOAflow_min(description="Minimum outdoor airflow septoint",
-      u(
-      unit="m3/s")) "Minimum outdoor airflow septoint"
-    annotation (Placement(transformation(extent={{-2,-218},{18,-198}})));
-  Modelica.Blocks.Interfaces.RealOutput VOAflow_min_out
-    "Minimum outdoor airflow septoint"
-    annotation (Placement(transformation(extent={{98,-218},{118,-198}})));
-  Modelica.Blocks.Interfaces.RealInput VOAflow_min_in
-    "Minimum outdoor airflow septoint"
-    annotation (Placement(transformation(extent={{-142,-228},{-102,-188}})));
 equation
   connect(dpSet.u, dpSet_in) annotation (Line(
       points={{-2,-80},{-120,-80}},
@@ -185,12 +175,8 @@ equation
       points={{21,0},{110,0}},
       color={0,0,127},
       smooth=Smooth.Bezier));
-  connect(VOAflow_min.u, VOAflow_min_in)
-    annotation (Line(points={{-4,-208},{-122,-208}}, color={0,0,127}));
-  connect(VOAflow_min.y, VOAflow_min_out)
-    annotation (Line(points={{19,-208},{108,-208}}, color={0,0,127}));
-  annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-240},
-            {100,180}}),                                        graphics={
+  annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,
+            -180},{100,180}}),                                  graphics={
           Rectangle(
           extent={{-100,180},{100,-180}},
           lineColor={0,0,0},
@@ -206,5 +192,5 @@ equation
           lineColor={0,0,0},
           textString="Write
 AHU")}),                         Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-100,
-            -240},{100,180}})));
+            -180},{100,180}})));
 end WriteAhu;

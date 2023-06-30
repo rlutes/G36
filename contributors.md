@@ -4,9 +4,7 @@ Thank you to all who have provided guidance on the development of this software.
 
 - Javier Arroyo, KU Leuven
 - Kyle Benne, National Renewable Energy Laboratory
-- David Blum, Lawrence Berkeley National Laboratory
-- Yan Chen, Pacific Northwest National Laboratory
-- Konstantin Filonenko, University of Southern Denmark
+
 - Valentin Gavan, ENGIE
 - Lieve Helsen, KU Leuven
 - Sen Huang, Pacific Northwest National Laboratory
@@ -19,3 +17,5 @@ Thank you to all who have provided guidance on the development of this software.
 - Harald Walnum, SINTEF
 - Michael Wetter, Lawrence Berkeley National Laboratory
 - Tao Yang, University of Southern Denmark
+- Ettore Zanetti, Lawrence Berkeley National Laboratory
+
