@@ -140,17 +140,17 @@ model HVAC
   Buildings.Utilities.IO.SignalExchange.Read reaPFan(
     description="AHU fan power consumption",
     KPIs=Buildings.Utilities.IO.SignalExchange.SignalTypes.SignalsForKPIs.ElectricPower,
-
     y(unit="W")) "Block for outputting the AHU fan power consumption"
     annotation (Placement(transformation(extent={{40,0},{60,20}})));
+
 equation
   connect(chiWatNet.ports_a[1], floor1.port_b_CooWat) annotation (Line(
-      points={{56,-91.1333},{56,-94},{100,-94},{100,6},{124,6},{124,20}},
+      points={{56,-91.1333},{56,-94},{100,-94},{100,6},{129.769,6},{129.769,20}},
       color={0,127,225},
       thickness=1));
   connect(floor1.port_a_CooWat, chiWatNet.ports_b[1]) annotation (Line(
-      points={{130,20},{130,0},{106,0},{106,-102},{74,-102},{74,-101.933},{56,
-          -101.933}},
+      points={{134.385,20},{134.385,0},{106,0},{106,-102},{74,-102},{74,
+          -101.933},{56,-101.933}},
       color={0,127,225},
       thickness=1));
 
@@ -159,12 +159,14 @@ equation
   connect(chiWatNet.ports_a[3], floor3.port_b_CooWat);
   connect(floor3.port_a_CooWat, chiWatNet.ports_b[3]);
   connect(boiWatNet.ports_a[1], floor1.port_b_HeaWat) annotation (Line(
-      points={{176,-93.1333},{196,-93.1333},{196,6},{154,6},{154,20},{153,20}},
+      points={{176,-93.1333},{196,-93.1333},{196,6},{154,6},{154,20},{152.077,
+          20}},
       color={238,46,47},
       thickness=1));
 
   connect(boiWatNet.ports_b[1], floor1.port_a_HeaWat) annotation (Line(
-      points={{176,-103.933},{192,-103.933},{192,0},{150,0},{150,20},{147.5,20}},
+      points={{176,-103.933},{192,-103.933},{192,0},{150,0},{150,20},{147.846,
+          20}},
       color={238,46,47},
       thickness=1));
 
@@ -238,7 +240,7 @@ equation
           pattern=LinePattern.DashDotDot)}),
     Icon(coordinateSystem(extent={{-100,-100},{100,100}}), graphics={
         Text(
-          extent={{-152,112},{148,152}},
+          extent={{-150,110},{150,150}},
           textString="%name",
           textColor={0,0,255}), Bitmap(extent={{-98,-98},{96,94}}, fileName=
               "modelica://MultizoneOfficeComplexAir/Resources/figure/hvac.png")}));

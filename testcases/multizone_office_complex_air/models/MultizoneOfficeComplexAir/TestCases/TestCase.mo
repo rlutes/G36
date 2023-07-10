@@ -2,7 +2,7 @@ within MultizoneOfficeComplexAir.TestCases;
 model TestCase
   extends Modelica.Icons.Example;
 
-  MultizoneOfficeComplexAir.BaseClasses.LoadSide.LoadWrapper loaEPlus(wholebuilding(building(spawnExe="spawn-0.3.0-8d93151657")))
+  MultizoneOfficeComplexAir.BaseClasses.LoadSide.LoadWrapper loaEPlus(wholebuilding(building(spawnExe="spawn-0.3.0-0fa49be497")))
     "Load calculation in EnergyPlus using Spawn, note this version is specified for BOPTEST environment; 
     Use spawn-0.3.0-0fa49be497 for Buildings library version"
     annotation (Placement(transformation(extent={{-10,-50},{10,-30}})));
@@ -47,10 +47,10 @@ model TestCase
     "External control activation signal"
     annotation (Placement(transformation(extent={{-80,-46},{-62,-30}})));
 equation
-  connect(hvac.Occ, loaEPlus.Occ) annotation (Line(points={{11.4,8},{24,8},{24,
-          -48.4},{11,-48.4}},    color={0,0,127}));
-  connect(loaEPlus.Loa, hvac.loa) annotation (Line(points={{11,-42},{22,-42},{
-          22,3},{11.4,3}},    color={0,0,127}));
+  connect(hvac.Occ, loaEPlus.Occ) annotation (Line(points={{11.4,8},{24,8},{24,-48.4},
+          {11,-48.4}},           color={0,0,127}));
+  connect(loaEPlus.Loa, hvac.loa) annotation (Line(points={{11,-42},{22,-42},{22,
+          3},{11.4,3}},       color={0,0,127}));
   connect(loaEPlus.Drybulb, hvac.TDryBul) annotation (Line(points={{11,-34},{20,
           -34},{20,-2},{11.4,-2}}, color={0,0,127}));
   connect(loaEPlus.Wetbulb, hvac.TWetBul) annotation (Line(points={{11,-31},{18,
@@ -66,8 +66,8 @@ equation
     connect(hvac.yPos_activate[i], extConAct.y);
   end for;
 
-  connect(hvac.TZon, loaEPlus.Temp) annotation (Line(points={{-11,0},{-20,0},{
-          -20,-40},{-12,-40}}, color={0,0,127}));
+  connect(hvac.TZon, loaEPlus.Temp) annotation (Line(points={{-11,0},{-20,0},{-20,
+          -40},{-12,-40}},     color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
         coordinateSystem(preserveAspectRatio=false)),
     experiment(
