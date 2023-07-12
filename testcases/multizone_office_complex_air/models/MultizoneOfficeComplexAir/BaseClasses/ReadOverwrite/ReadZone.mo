@@ -83,17 +83,17 @@ model ReadZone "Collection of zone measurements for BOPTEST"
   Buildings.Utilities.IO.SignalExchange.Read yHea(
     description="Heating PID signal measurement for zone " + zone,
     KPIs=Buildings.Utilities.IO.SignalExchange.SignalTypes.SignalsForKPIs.None,
-
     y(unit="1"),
     zone=zone) "Heating PID signal measurement"
     annotation (Placement(transformation(extent={{0,-140},{20,-120}})));
+
   Buildings.Utilities.IO.SignalExchange.Read yCoo(
     description="Cooling PID signal measurement for zone " + zone,
     KPIs=Buildings.Utilities.IO.SignalExchange.SignalTypes.SignalsForKPIs.None,
-
     y(unit="1"),
     zone=zone) "Cooling PID signal measurement"
     annotation (Placement(transformation(extent={{0,-110},{20,-90}})));
+
   Modelica.Blocks.Interfaces.RealInput yHea_in "Heating PID signal measurement"
     annotation (Placement(transformation(extent={{-140,-150},{-100,-110}})));
   Modelica.Blocks.Interfaces.RealInput yCoo_in "Cooling PID signal measurement"

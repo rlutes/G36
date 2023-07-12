@@ -7,7 +7,6 @@ model TestCase
     Use spawn-0.3.0-0fa49be497 for Buildings library version"
     annotation (Placement(transformation(extent={{-10,-50},{10,-30}})));
   MultizoneOfficeComplexAir.BaseClasses.HVACSide.HVAC hvac(
-    zonVAVCon(heaCon(k=0.01), cooCon(k=0.1)),
     alpha=0.8,
     floor1(duaFanAirHanUnit(
         mixingBox(mixBox(
