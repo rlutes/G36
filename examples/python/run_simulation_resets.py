@@ -34,7 +34,7 @@ class Simulate:
         reset_config = config.get("resets")
         controller = config.get("controller", {})
         self.controller = None
-        start_day = config.get("start_day", 200)
+        start_day = config.get("start_day", 180)
         self.start_time = start_day * 86400
         length = config.get("simulation_duration_days", 5)
         self.end_time = (self.start_time + length) * 86400
@@ -54,10 +54,10 @@ class Simulate:
         """
         Get available data from simulation.
         """
-        measurements = requests.get('{0}/measurements'.format(self.url)).json()
+        measurements = requests.get('{0}/measurements'.format(self.url)).json()['payload']
         measurements = list(measurements.keys())
         measurements.append('time')
-        inputs = requests.get('{0}/inputs'.format(self.url)).json()
+        inputs = requests.get('{0}/inputs'.format(self.url)).json()['payload']
         inputs = list(inputs.keys())
         measurements.extend(inputs)
         print('Measurements:\t\t\t{0}'.format(measurements))
@@ -87,15 +87,15 @@ class Simulate:
         3.  Call reset to set the start and end time for the simulation.
         """
         # y = requests.post('{0}/advance'.format(self.url), json=json.dumps({})).json()
-        self.init = requests.put('{0}/initialize'.format(self.url), data={'start_time': self.start_time, 'warmup_period': 0}).json()
+        self.init = requests.put('{0}/initialize'.format(self.url), data={'start_time': self.start_time, 'warmup_period': 0}).json()['payload']
         res = requests.put('{0}/step'.format(self.url), data={"step": self.step})
 
     def create_data_store(self):
         """
         Create results file for simulation.
         """
-        dt_str = datetime.now().strftime("%b %d %Y %H:%M")
-        file_name = "results/results_{}.csv".format(dt_str)
+        dt_str = datetime.now().strftime("_%b%d%Y_%H%M")
+        file_name = "results/results"+dt_str+".csv"
 
         if not os.path.exists('results'):
             os.makedirs('results')
@@ -125,18 +125,22 @@ class Simulate:
                     for point, activate, value_pt in zip(cls.control, cls.activate, cls.current_sp):
                         self.u[point] = value_pt
                         self.u[activate] = cls.activate_value
-            for cls in self.controller:
-                cls.update(y)
-                self.u.update(cls.controller)
+            if self.controller is not None:
+                for cls in self.controller:
+                    cls.update(y)
+                    self.u.update(cls.controller)
             print("Control: {} -- i: {}".format(self.u, i))
-            y = requests.post('{0}/advance'.format(self.url), data=self.u).json()
+            y = requests.post('{0}/advance'.format(self.url), data=self.u).json()['payload']
+            # y = {key: y[key] for key in self.measurements if key in y}
             self.writer.writerow(dict(sorted(y.items(), key=lambda x: x[0])))
             print("Measurements at time {}: {}".format(y['time'], y))
         print('\nTest case complete.')
 
 
 if __name__ == "__main__":
-    with open("configs/config") as f:
+    working_dir = 'C:/Github/G36/examples/python'
+    os.chdir(working_dir)
+    with open("configs/baseline_config") as f:
         config = json.load(f)
     print(config)
     simulation = Simulate(config)

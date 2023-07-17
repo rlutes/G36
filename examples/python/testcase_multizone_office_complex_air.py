@@ -11,9 +11,9 @@ in controllers/multizone_office_complex_air.py.
 # ----------------------
 import sys
 import os
-sys.path.insert(0, '/'.join((os.path.dirname(os.path.abspath(__file__))).split('/')[:-2]))
-from examples.python.interface import control_test
+sys.path.insert(0, '\\'.join((os.path.dirname(os.path.abspath(__file__))).split('\\')[:-2]))
 
+from examples.python.interface import control_test
 
 
 def run(plot=False):
@@ -41,16 +41,17 @@ def run(plot=False):
     # CONFIGURATION FOR THE CONTROL TEST
     # ---------------------------------------
     control_module = 'examples.python.controllers.multizone_office_complex_air'
-    start_time = 180*24*3600
+    start_time = 0*24*3600+9*3600
     warmup_period = 0
-    length = 1*24*3600
+    length = 1*1*3600
     step = 300
 
     # ---------------------------------------
 
     # RUN THE CONTROL TEST
     # --------------------
-    kpi, df_res, custom_kpi_result, forecasts = control_test(control_module,
+    #kpi, df_res, custom_kpi_result, forecasts = control_test(control_module,
+    df_res, custom_kpi_result, forecasts = control_test(control_module,
                                                              start_time=start_time,
                                                              warmup_period=warmup_period,
                                                              length=length,
@@ -58,8 +59,12 @@ def run(plot=False):
     # POST-PROCESS RESULTS
     # --------------------
     time = df_res.index.values/3600  # convert s --> hr
-    PChi=df_res['hvac_reaPChi_y'].values
-    PCHWPum=df_res['hvac_reaPCHWPum_y'].values
+    PChi=df_res['hvac_reaChiWatSys_reaPChi_y'].values
+    PCHWPum=df_res['hvac_reaChiWatSys_reaPPum_y'].values
+    PCooTow=df_res['hvac_reaChiWatSys_reaPCooTow_y'].values
+    PBoi=df_res['hvac_reaHotWatSys_reaPBoi_y'].values
+    PHWPum=df_res['hvac_reaHotWatSys_reaPPum_y'].values
+    
     # Plot results if needed
     if plot:
         try:
@@ -80,9 +85,10 @@ def run(plot=False):
             print("Cannot import numpy or matplotlib for plot generation")
     # --------------------
 
-    return kpi, df_res
-
+    #return kpi, df_res
+    return df_res
 
 if __name__ == "__main__":
-    kpi, df_res = run()
+    #kpi, df_res = run()
+    df_res = run()
     df_res.to_csv("df_res_multizone_office_complex_air.csv")

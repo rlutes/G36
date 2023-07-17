@@ -95,9 +95,9 @@ model HVAC
     "Cooling tower power consumption"
     annotation (Placement(transformation(extent={{-16,-86},{4,-66}})));
 
-  ReadOverwrite.ReadWatSys reaChiWatSys(isChiPla=true)
+  ReadOverwrite.ReadChilledWater reaChiWatSys
     annotation (Placement(transformation(extent={{18,-48},{38,-26}})));
-  ReadOverwrite.ReadWatSys reaHotWatSys(isChiPla=false)
+  ReadOverwrite.ReadHotWater reaHotWatSys
     annotation (Placement(transformation(extent={{160,-48},{180,-26}})));
   Modelica.Blocks.Sources.Constant dpChiWatStaSet(k=478250*0.5)
     "Secondary chilled water loop static Pressure setpoint"
@@ -105,9 +105,21 @@ model HVAC
   Modelica.Blocks.Sources.Constant dpHotWatStaSet(k=478250*0.25)
     "Secondary hot water loop static Pressure setpoint"
     annotation (Placement(transformation(extent={{40,-80},{60,-60}})));
-  ReadOverwrite.WriteWatSys oveChiWatSys
+  ReadOverwrite.WriteWaterPlant oveChiWatSys(TW_set(u(
+        unit="K",
+        min=278.15,
+        max=288.15)), dp_set(u(
+        unit="Pa",
+        min=0,
+        max=19130000)))
     annotation (Placement(transformation(extent={{-50,-36},{-30,-14}})));
-  ReadOverwrite.WriteWatSys oveHotWatSys
+  ReadOverwrite.WriteWaterPlant oveHotWatSys(TW_set(u(
+        unit="K",
+        min=291.15,
+        max=353.15)), dp_set(u(
+        unit="Pa",
+        min=0,
+        max=19130000)))
     annotation (Placement(transformation(extent={{70,-36},{90,-14}})));
 equation
   connect(chiWatNet.ports_a[1], floor1.port_b_CooWat) annotation (Line(

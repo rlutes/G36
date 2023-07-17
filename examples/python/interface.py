@@ -191,33 +191,7 @@ def control_test(control_module='', start_time=0, warmup_period=0, length=24*360
 
     # VIEW RESULTS
     # -------------------------------------------------------------------------
-    # Report KPIs
-    kpi = check_response(requests.get('{0}/kpi'.format(url)))
-    print('\nKPI RESULTS \n-----------')
-    for key in kpi.keys():
-        if key == 'ener_tot':
-            unit = 'kWh/m$^2$'
-        elif key == 'pele_tot':
-            unit = 'kW/m$^2$'
-        elif key == 'pgas_tot':
-            unit = 'kW/m$^2$'
-        elif key == 'pdih_tot':
-            unit = 'kW/m$^2$'
-        elif key == 'tdis_tot':
-            unit = 'Kh/zone'
-        elif key == 'idis_tot':
-            unit = 'ppmh/zone'
-        elif key == 'cost_tot':
-            unit = 'Euro or \$/m$^2$'
-        elif key == 'emis_tot':
-            unit = 'KgCO2/m$^2$'
-        elif key == 'time_rat':
-            unit = 's/s'
-        else:
-            unit = None
-        print('{0}: {1} {2}'.format(key, kpi[key], unit))
-
-    # POST PROCESS RESULTS
+    
     # -------------------------------------------------------------------------
     # Get result data
     points = list(measurements.keys()) + list(inputs.keys())
@@ -225,4 +199,5 @@ def control_test(control_module='', start_time=0, warmup_period=0, length=24*360
     res = check_response(requests.put('{0}/results'.format(url), json={'point_names': points, 'start_time': start_time, 'final_time': final_time}))
     df_res = pd.DataFrame.from_dict(res)
     df_res = df_res.set_index('time')
-    return kpi, df_res, custom_kpi_result, forecasts
+    #return kpi, df_res, custom_kpi_result, forecasts
+    return df_res, custom_kpi_result, forecasts

@@ -163,11 +163,11 @@ class DatReset(Reset):
         try:
             self.oat_name = config.pop("oat_name")
         except KeyError:
-            self.oat_name = 'weaSta_reaWeaTDryBul_y'
+            self.oat_name = 'loaEPlus_weatherStation_reaWeaTDryBul_y'
         try:
             self.occupancy_name = config.pop("occupancy_name")
         except KeyError:
-            self.occupancy_name = 'hvac_reaAhu_occ_y'
+            self.occupancy_name = 'hvac_floor1_readAhu_occ_y'
 
         self.csp = {}
         self.hsp = {}
@@ -289,7 +289,7 @@ class ChwReset(Reset):
         try:
             self.occupancy_name = config.pop("occupancy_name")
         except KeyError:
-            self.occupancy_name = 'hvac_reaAhu_occ_y'
+            self.occupancy_name = 'hvac_floor1_readAhu_occ_y'
         self.reset_sp = 100.0
         self.sat_sp = {}
         self.clg_signal = {}
@@ -387,7 +387,7 @@ class HwReset(Reset):
         try:
             self.occupancy_name = config.pop("occupancy_name")
         except KeyError:
-            self.occupancy_name = 'hvac_reaAhu_occ_y'
+            self.occupancy_name = 'hvac_floor1_readAhu_occ_y'
         self.sat_sp = {}
         self.htg_signal = {}
         self.sat = {}
@@ -467,7 +467,7 @@ class StaticPressureReset(Reset):
         try:
             self.occupancy_name = config.pop("occupancy_name")
         except KeyError:
-            self.occupancy_name = 'hvac_reaAhu_occ_y'
+            self.occupancy_name = 'hvac_floor1_readAhu_occ_y'
 
         self.airflow_sp = {}
         self.airflow = {}
@@ -529,7 +529,7 @@ class VentilationController:
         self.zones = {}
         # need damper or OA fraction for zones
         self.controller = {}
-        self.occupancy_name = config.get('occupancy_name', 'hvac_reaAhu_occ_y')
+        self.occupancy_name = config.get('occupancy_name', 'hvac_floor1_readAhu_occ_y')
         self.control = config["control"]
         self.activate = config["activate"]
         self.oad_name = config.get("oad_name")

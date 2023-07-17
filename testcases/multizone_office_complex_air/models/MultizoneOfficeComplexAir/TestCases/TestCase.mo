@@ -2,8 +2,8 @@ within MultizoneOfficeComplexAir.TestCases;
 model TestCase
   extends Modelica.Icons.Example;
 
-  MultizoneOfficeComplexAir.BaseClasses.LoadSide.LoadWrapper loaEPlus(wholebuilding(building(spawnExe="spawn-0.3.0-0fa49be497")))
-    "Load calculation in EnergyPlus using Spawn, note this version is specified for BOPTEST environment; 
+  MultizoneOfficeComplexAir.BaseClasses.LoadSide.LoadWrapper loaEPlus(wholebuilding(building(spawnExe="spawn-0.3.0-8d93151657")))
+    "Load calculation in EnergyPlus using Spawn, note this version spawn-0.3.0-8d93151657 is specified for BOPTEST environment; 
     Use spawn-0.3.0-0fa49be497 for Buildings library version"
     annotation (Placement(transformation(extent={{-10,-50},{10,-30}})));
   MultizoneOfficeComplexAir.BaseClasses.HVACSide.HVAC hvac(

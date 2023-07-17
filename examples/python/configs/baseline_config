@@ -1,6 +1,6 @@
 {
-   "start_day": 0,
-   "simulation_duration_days": 365,
+   "start_day": 180,
+   "simulation_duration_days": 30,
    "step": 60,
    "reset_frequency": 5,
    "resets": {
