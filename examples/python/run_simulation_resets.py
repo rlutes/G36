@@ -16,8 +16,8 @@ import json, collections
 import csv
 from datetime import datetime, timedelta
 import Resets.resets as reset
-
-
+import time
+import pandas as pd
 
 class Simulate:
     def __init__(self, config):
@@ -114,6 +114,7 @@ class Simulate:
         """
         Run loop
         """
+        runtime_list = []
         y = self.init if self.init is not None else {}
         for i in range(int(self.loop)):
             # Advance simulation
@@ -130,11 +131,19 @@ class Simulate:
                     cls.update(y)
                     self.u.update(cls.controller)
             print("Control: {} -- i: {}".format(self.u, i))
+            starttime = time.time()
             y = requests.post('{0}/advance'.format(self.url), data=self.u).json()['payload']
             # y = {key: y[key] for key in self.measurements if key in y}
+            # Calculate the runtime
+            endtime = time.time()
+            runtime_list.append(endtime - starttime)
+            print("CPU runtime:", endtime - starttime, "seconds")
             self.writer.writerow(dict(sorted(y.items(), key=lambda x: x[0])))
-            print("Measurements at time {}: {}".format(y['time'], y))
+            #print("Measurements at time {}: {}".format(y['time'], y))
         print('\nTest case complete.')
+        df = pd.DataFrame({'Column1': runtime_list})
+        # Save DataFrame to a CSV file
+        df.to_csv('run_time.csv', index=False)
 
 
 if __name__ == "__main__":

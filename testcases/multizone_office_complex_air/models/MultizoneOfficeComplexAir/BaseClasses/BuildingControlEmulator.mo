@@ -1833,7 +1833,11 @@ package BuildingControlEmulator
                 Line(
                   points={{50,40},{68,66}},
                   color={0,0,127},
-                  thickness=0.5)}),                                      Diagram(coordinateSystem(preserveAspectRatio=false)));
+                  thickness=0.5),
+                Text(
+                  extent={{-150,112},{150,152}},
+                  textString="%name",
+                  textColor={0,0,255})}),                                Diagram(coordinateSystem(preserveAspectRatio=false)));
         end MixingBox;
 
         package BaseClasses
@@ -2190,7 +2194,7 @@ package BuildingControlEmulator
               annotation (Placement(transformation(extent={{68,-60},{88,-40}})));
             Buildings.Controls.OBC.CDL.Continuous.Switch swi
               annotation (Placement(transformation(extent={{0,-60},{20,-40}})));
-            Modelica.Blocks.Sources.RealExpression realExpression1(y=0)
+            Modelica.Blocks.Sources.RealExpression realExpression1(y=DamMin)
               annotation (Placement(transformation(extent={{-34,-68},{-14,-48}})));
           equation
             connect(pI.SetPoi, SetPoi)
@@ -2228,7 +2232,11 @@ package BuildingControlEmulator
                     extent={{-34,26},{38,-34}},
                     lineColor={0,127,255},
                     lineThickness=1,
-                    textString="Eco")}),                                   Diagram(coordinateSystem(preserveAspectRatio=false)));
+                    textString="Eco"),
+                  Text(
+                    extent={{-156,112},{144,152}},
+                    textString="%name",
+                    textColor={0,0,255})}),                                Diagram(coordinateSystem(preserveAspectRatio=false)));
           end ecoCon;
         end Control;
 
@@ -3195,12 +3203,10 @@ package BuildingControlEmulator
       equation
         connect(On, booleanToReal.u) annotation (Line(
             points={{-120,0},{-66,0},{-20,0}},
-            color={255,0,255},
-            pattern=LinePattern.Dash));
+            color={255,0,255}));
         connect(booleanToReal.y, y) annotation (Line(
             points={{3,0},{60,0},{110,0}},
-            color={0,0,127},
-            pattern=LinePattern.Dash));
+            color={0,0,127}));
         annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
                 Rectangle(
                 extent={{-100,100},{100,-100}},
@@ -3213,8 +3219,16 @@ package BuildingControlEmulator
                 lineThickness=0.5,
                 fillColor={255,255,255},
                 fillPattern=FillPattern.Solid,
-                textString="ConstantSpeed")}), Diagram(coordinateSystem(
-                preserveAspectRatio=false)));
+                textString="ConstantSpeed"),
+              Text(
+                extent={{-154,110},{146,150}},
+                textString="%name",
+                textColor={0,0,255})}),        Diagram(coordinateSystem(
+                preserveAspectRatio=false), graphics={
+              Text(
+                extent={{-144,112},{156,152}},
+                textString="%name",
+                textColor={0,0,255})}));
       end Constant;
 
       block LimPID
@@ -3903,9 +3917,8 @@ First implementation.
         parameter Integer numTemp(min=1) = 1
             "The size of the temeprature vector";
         Control.VAVDualFanControl variableSpeed(k=k, Ti=Ti,
-          waitTime=waitTime,
-          SpeRat=SpeRat)
-          annotation (Placement(transformation(extent={{-62,40},{-42,60}})));
+          waitTime=waitTime)
+          annotation (Placement(transformation(extent={{-60,44},{-40,64}})));
         Modelica.Blocks.Interfaces.RealInput PreSetPoi
           "Connector of setpoint input signal"
           annotation (Placement(transformation(extent={{-140,0},{-100,40}})));
@@ -3930,7 +3943,9 @@ First implementation.
             min=0,
             max=1,
             unit="1"))
-          annotation (Placement(transformation(extent={{-28,46},{-12,62}})));
+          annotation (Placement(transformation(extent={{-26,44},{-6,64}})));
+        Modelica.Blocks.Math.Gain gain(k=SpeRat)
+          annotation (Placement(transformation(extent={{16,50},{24,58}})));
       equation
         connect(withoutMotor.port_a, temEnt.port_b) annotation (Line(
             points={{-18,0},{-60,0}},
@@ -3964,22 +3979,19 @@ First implementation.
             points={{3,6},{12,6},{20,6},{20,40},{110,40}},
             color={0,0,127}));
         connect(On, variableSpeed.On) annotation (Line(
-            points={{-120,60},{-68,60},{-68,56},{-64,56}},
+            points={{-120,60},{-62,60}},
             color={255,0,255}));
         connect(variableSpeed.SetPoi, PreSetPoi) annotation (Line(
-            points={{-64,52},{-64,52},{-78,52},{-78,20},{-120,20}},
+            points={{-62,56},{-80,56},{-80,20},{-120,20}},
             color={0,0,127}));
         connect(variableSpeed.Mea, PreMea) annotation (Line(
-            points={{-64,48},{-66,48},{-66,16},{-56,16},{-56,-100},{-120,-100}},
-            color={0,0,127}));
-        connect(variableSpeed.yRet, yRet) annotation (Line(
-            points={{-41,46},{8,46},{8,-82},{110,-82}},
+            points={{-62,52},{-66,52},{-66,16},{-56,16},{-56,-100},{-120,-100}},
             color={0,0,127}));
         connect(tempCheck.Temp, Temp) annotation (Line(
             points={{-94,-40},{-100,-40},{-100,-60},{-120,-60}},
             color={0,0,127}));
         connect(tempCheck.On, variableSpeed.CyclingOn) annotation (Line(
-            points={{-71,-40},{-66,-40},{-66,42},{-66,44},{-64,44}},
+            points={{-71,-40},{-68,-40},{-68,48},{-62,48}},
             color={255,0,255}));
         connect(tempCheck.CooSetPoi, CooTempSetPoi) annotation (Line(
             points={{-94,-34},{-98,-34},{-98,-20},{-120,-20}},
@@ -3988,10 +4000,14 @@ First implementation.
             points={{-94,-46},{-98,-46},{-98,-60},{-60,-60},{-60,34},{-88,34},{-88,
                 100},{-120,100}},
             color={0,0,127}));
-        connect(variableSpeed.ySup, oveSpeSupFan.u) annotation (Line(points={{
-                -41,53.8},{-30,53.8},{-30,54},{-29.6,54}}, color={0,0,127}));
-        connect(oveSpeSupFan.y, withoutMotor.u) annotation (Line(points={{-11.2,
-                54},{0,54},{0,20},{-32,20},{-32,6},{-19,6}}, color={0,0,127}));
+        connect(variableSpeed.ySup, oveSpeSupFan.u) annotation (Line(points={{-39,54},
+                {-28,54}},                                 color={0,0,127}));
+        connect(oveSpeSupFan.y, withoutMotor.u) annotation (Line(points={{-5,54},
+                {2,54},{2,26},{-30,26},{-30,6},{-19,6}},     color={0,0,127}));
+        connect(oveSpeSupFan.y, gain.u)
+          annotation (Line(points={{-5,54},{15.2,54}}, color={0,0,127}));
+        connect(gain.y, yRet) annotation (Line(points={{24.4,54},{32,54},{32,
+                -82},{110,-82}}, color={0,0,127}));
         annotation (Icon(graphics={
               Polygon(points={{-40,60},{-40,-60},{60,0},{-40,60}}, lineColor={28,108,
                     200}),
@@ -4155,12 +4171,10 @@ First implementation.
               thickness=1));
           connect(withoutMotor.P, P) annotation (Line(
               points={{3,6},{12,6},{20,6},{20,40},{110,40}},
-              color={0,0,127},
-              pattern=LinePattern.Dash));
+              color={0,0,127}));
           connect(withoutMotor.Rat, Rat) annotation (Line(
               points={{3,-6},{12,-6},{12,-60},{110,-60}},
-              color={0,0,127},
-              pattern=LinePattern.Dash));
+              color={0,0,127}));
           annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
                 Polygon(points={{-40,60},{-40,-60},{60,0},{-40,60}}, lineColor={28,108,
                       200}),
@@ -4687,7 +4701,11 @@ First implementation.
                   lineThickness=0.5,
                   fillColor={255,255,255},
                   fillPattern=FillPattern.Solid,
-                  textString="CyclingControl")}),Diagram(coordinateSystem(
+                  textString="CyclingControl"),
+                Text(
+                  extent={{-154,102},{146,142}},
+                  textString="%name",
+                  textColor={0,0,255})}),        Diagram(coordinateSystem(
                   preserveAspectRatio=false)));
         end CyclingOn;
 
@@ -4698,8 +4716,7 @@ First implementation.
             "Time constant of Integrator block";
           parameter Modelica.Units.SI.Time waitTime(min=0) = 0
             "Wait time before transition fires";
-          parameter Real SpeRat
-              "Speed ratio";
+
           BuildingControlEmulator.Devices.FlowMover.Control.CyclingOn cyclingOn(waitTime=
                 waitTime)
             annotation (Placement(transformation(extent={{-60,-40},{-40,-20}})));
@@ -4715,14 +4732,10 @@ First implementation.
           Modelica.Blocks.Interfaces.RealInput Mea
             "Connector of measurement input signal"
             annotation (Placement(transformation(extent={{-140,-40},{-100,0}})));
-          Modelica.Blocks.Math.Gain gain(k=SpeRat)
-            annotation (Placement(transformation(extent={{84,-44},{92,-36}})));
           BuildingControlEmulator.Devices.Control.Constant constantSpeed
-            annotation (Placement(transformation(extent={{-20,-40},{0,-20}})));
+            annotation (Placement(transformation(extent={{-24,-40},{-4,-20}})));
           Modelica.Blocks.Interfaces.RealOutput ySup "Connector of Real output signal"
-            annotation (Placement(transformation(extent={{100,28},{120,48}})));
-          Modelica.Blocks.Interfaces.RealOutput yRet "Output signal connector"
-            annotation (Placement(transformation(extent={{100,-50},{120,-30}})));
+            annotation (Placement(transformation(extent={{100,-10},{120,10}})));
           Modelica.Blocks.Interfaces.BooleanInput CyclingOn
             annotation (Placement(transformation(extent={{-140,-80},{-100,-40}})));
           Modelica.Blocks.Logical.Not not1
@@ -4731,12 +4744,9 @@ First implementation.
             annotation (Placement(transformation(extent={{12,28},{32,48}})));
           Buildings.Controls.OBC.CDL.Continuous.LimitSlewRate ramLim(raisingSlewRate=1/
                 120) "Ramp limiter for fan control signal"
-            annotation (Placement(transformation(extent={{40,70},{60,90}})));
+            annotation (Placement(transformation(extent={{40,-10},{60,10}})));
           Buildings.Controls.OBC.CDL.Continuous.Limiter lim(uMax=1, uMin=0)
-            annotation (Placement(transformation(extent={{66,70},{86,90}})));
-          Modelica.Blocks.Sources.BooleanExpression
-                                                 booleanExpression(y=On)
-            annotation (Placement(transformation(extent={{-40,60},{-20,80}})));
+            annotation (Placement(transformation(extent={{66,-10},{86,10}})));
         equation
           connect(variableSpeed.On, On) annotation (Line(
               points={{-62,52},{-80,52},{-80,60},{-120,60}},
@@ -4745,11 +4755,7 @@ First implementation.
               points={{-62,40},{-70,40},{-70,-20},{-120,-20}},
               color={0,0,127}));
           connect(cyclingOn.OnSigOut, constantSpeed.On) annotation (Line(points={{-39,-30},
-                  {-22,-30}},             color={255,0,255}));
-          connect(gain.y, yRet) annotation (Line(
-              points={{92.4,-40},{110,-40}},
-              color={0,0,127},
-              pattern=LinePattern.Dash));
+                  {-26,-30}},             color={255,0,255}));
           connect(cyclingOn.CyclingOn, CyclingOn) annotation (Line(
               points={{-62,-30},{-80,-30},{-80,-60},{-120,-60}},
               color={255,0,255}));
@@ -4761,20 +4767,18 @@ First implementation.
               color={255,0,255}));
           connect(variableSpeed.y, swi.u1)
             annotation (Line(points={{-39,46},{10,46}}, color={0,0,127}));
-          connect(constantSpeed.y, swi.u3) annotation (Line(points={{1,-30},{4,-30},{4,
+          connect(constantSpeed.y, swi.u3) annotation (Line(points={{-3,-30},{4,-30},{4,
                   30},{10,30}}, color={0,0,127}));
-          connect(gain.u, ySup) annotation (Line(points={{83.2,-40},{76,-40},{76,38},{
-                  110,38}},                 color={0,0,127}));
           connect(ramLim.y, lim.u)
-            annotation (Line(points={{62,80},{64,80}}, color={0,0,127}));
-          connect(booleanExpression.y, swi.u2) annotation (Line(points={{-19,70},{2,70},
-                  {2,38},{10,38}}, color={255,0,255}));
-          connect(lim.y, ySup) annotation (Line(points={{88,80},{94,80},{94,38},{110,38}},
+            annotation (Line(points={{62,0},{64,0}},   color={0,0,127}));
+          connect(lim.y, ySup) annotation (Line(points={{88,0},{110,0}},
                 color={0,0,127}));
-          connect(ramLim.u, swi.y) annotation (Line(points={{38,80},{36,80},{36,
+          connect(ramLim.u, swi.y) annotation (Line(points={{38,0},{36,0},{36,
                   38},{34,38}}, color={0,0,127}));
           connect(SetPoi, variableSpeed.SetPoi) annotation (Line(points={{-120,
                   20},{-74,20},{-74,46},{-62,46}}, color={0,0,127}));
+          connect(On, swi.u2) annotation (Line(points={{-120,60},{-80,60},{-80,
+                  28},{-20,28},{-20,38},{10,38}}, color={255,0,255}));
           annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
                   Rectangle(
                   extent={{-100,100},{100,-100}},
@@ -4787,7 +4791,11 @@ First implementation.
                   lineThickness=0.5,
                   fillColor={255,255,255},
                   fillPattern=FillPattern.Solid,
-                  textString="VAVDualFanControl")}), Diagram(coordinateSystem(
+                  textString="VAVDualFanControl"),
+                Text(
+                  extent={{-154,102},{146,142}},
+                  textString="%name",
+                  textColor={0,0,255})}),            Diagram(coordinateSystem(
                   preserveAspectRatio=false)),
             experiment(
               StartTime=15638400,
@@ -4812,9 +4820,11 @@ First implementation.
           Modelica.Blocks.Interfaces.RealInput HeaSetPoi[numTemp]
             "Connector of setpoint input signal"
             annotation (Placement(transformation(extent={{-140,-80},{-100,-40}})));
+          parameter Modelica.Units.SI.TemperatureDifference dTCycCon = 0.2
+            "Temperature difference for trigerring the cycle control";
         algorithm
          for i in 1:numTemp loop
-            if (Temp[i] > CooSetPoi[i]) or (Temp[i] < HeaSetPoi[i]) then
+            if (Temp[i] > CooSetPoi[i] + dTCycCon) or (Temp[i] < HeaSetPoi[i] - dTCycCon) then
                On := true;
                break;
              end if;
@@ -4833,7 +4843,11 @@ First implementation.
                   lineThickness=0.5,
                   fillColor={255,255,255},
                   fillPattern=FillPattern.Solid,
-                  textString="CyclingControl")}),Diagram(coordinateSystem(
+                  textString="CyclingControl"),
+                Text(
+                  extent={{-156,106},{144,146}},
+                  textString="%name",
+                  textColor={0,0,255})}),        Diagram(coordinateSystem(
                   preserveAspectRatio=false)));
         end TempCheck;
 
@@ -8600,31 +8614,25 @@ First implementation.
             thickness=1));
         connect(On, valCHW.y) annotation (Line(
             points={{-109,-40},{-44,-40},{-44,-24},{70,-24},{70,-68}},
-            color={0,0,127},
-            pattern=LinePattern.Dash));
+            color={0,0,127}));
 
         connect(realToBoolean.u, valCHW.y) annotation (Line(
             points={{-71.6,-10},{-80,-10},{-80,-40},{-44,-40},{-44,-24},{70,-24},{70,-68}},
-            color={0,0,127},
-            pattern=LinePattern.Dash));
+            color={0,0,127}));
         connect(realToBoolean.y, conPI.On) annotation (Line(
             points={{-53.2,-10},{-40,-10},{-40,10},{-80,10},{-80,46},{-66,46}},
-            color={255,0,255},
-            pattern=LinePattern.Dash));
+            color={255,0,255}));
         connect(conPI.SetPoi, THWSet)
           annotation (Line(
             points={{-66,40},{-109,40}},
-            color={0,0,127},
-            pattern=LinePattern.Dash));
+            color={0,0,127}));
         connect(conPI.y, boi.y)
           annotation (Line(
             points={{-43,40},{-8,40},{-8,-26}},
-            color={0,0,127},
-            pattern=LinePattern.Dash));
+            color={0,0,127}));
         connect(realExpression.y, conPI.Mea) annotation (Line(
-            points={{-49,-30},{-30,-30},{-30,22},{-84,22},{-84,34},{-66,34}},
-            color={0,0,127},
-            pattern=LinePattern.Dash));
+            points={{-49,-30},{-30,-30},{-30,22},{-76,22},{-76,34},{-66,34}},
+            color={0,0,127}));
         annotation (Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-100,
                   -100},{100,100}})),           Icon(coordinateSystem(
                 preserveAspectRatio=false, extent={{-100,-100},{100,100}}), graphics={
@@ -8688,7 +8696,11 @@ First implementation.
                 lineColor={0,0,255},
                 pattern=LinePattern.None,
                 fillColor={255,0,0},
-                fillPattern=FillPattern.Solid)}),
+                fillPattern=FillPattern.Solid),
+              Text(
+                extent={{-152,106},{148,146}},
+                textString="%name",
+                textColor={0,0,255})}),
           Documentation(revisions="<html>
 <ul>
 <li>
@@ -12491,8 +12503,7 @@ First implementation, based on <code>Modelica.Fluid</code>.
           Modelica.Blocks.Interfaces.RealInput HeaTempSetPoi[numTemp]
             "Connector of setpoint input signal"
             annotation (Placement(transformation(extent={{-120,70},{-100,90}})));
-          Modelica.Blocks.Sources.BooleanExpression
-                                                 booleanExpression(y=true)
+          Modelica.Blocks.Sources.BooleanExpression booleanExpression(y=true)
             annotation (Placement(transformation(extent={{-34,-58},{-14,-38}})));
           Modelica.Blocks.Interfaces.RealInput TOut "outdoor air temperature"
             annotation (Placement(transformation(extent={{-120,-90},{-100,-70}})));
@@ -12635,9 +12646,8 @@ First implementation, based on <code>Modelica.Fluid</code>.
               color={0,0,127}));
           connect(On, mixingBox.On) annotation (Line(points={{-110,-100},{-68,-100},{
                   -68,-12}}, color={255,0,255}));
-          connect(On, supFan.On) annotation (Line(points={{-110,-100},{20,-100},
-                  {20,6},{16,6}},
-                           color={255,0,255}));
+          connect(On, supFan.On) annotation (Line(points={{-110,-100},{4,-100},{4,6},{16,
+                  6}},     color={255,0,255}));
           connect(senTemDisAir.T, TSupAir)
             annotation (Line(points={{82,11},{82,40},{110,40}}, color={0,0,127}));
           connect(senTemMixAir.port_b, cooCoil.port_a_Air) annotation (Line(
@@ -17137,8 +17147,7 @@ First implementation.
           connect(boi[i].THWSet, THWSet);
           connect(boi[i].On, On[i]);
         end for;
-        connect(On, Rat) annotation (Line(points={{-109,-40},{110,-40}},           color={0,0,127},
-            pattern=LinePattern.Dash));
+        connect(On, Rat) annotation (Line(points={{-109,-40},{110,-40}},           color={0,0,127}));
 
         annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
               Rectangle(
@@ -17200,7 +17209,11 @@ First implementation.
                 extent={{20,-44},{30,-56}},
                 lineColor={0,0,255},
                 fillColor={0,128,255},
-                fillPattern=FillPattern.Solid)}),                      Diagram(coordinateSystem(preserveAspectRatio=false)));
+                fillPattern=FillPattern.Solid),
+              Text(
+                extent={{-154,104},{146,144}},
+                textString="%name",
+                textColor={0,0,255})}),                                Diagram(coordinateSystem(preserveAspectRatio=false)));
       end MultiBoilers;
 
       model MultiHeterBoilers
@@ -19377,7 +19390,7 @@ First implementation.
         MixingBox_k=1,
         MixingBox_Ti=60,
         Fan_Ti=60,
-        waitTime=900,
+        waitTime=waitTime,
         Fan_SpeRat=0.9,
         HydEff=HydEff,
         MotEff=MotEff,
@@ -19668,7 +19681,7 @@ First implementation.
               -11.22},{-22,-11.22},{-22,29.8261},{26,29.8261}},        color={0,0,127},
           pattern=LinePattern.Dash));
 
-      connect(duaFanAirHanUnit.PFan, readAhu.PFanSup_in) annotation (Line(
+      connect(duaFanAirHanUnit.PFan,readAhu.PFanTot_in)  annotation (Line(
             points={{-48.6,4.64},{-20,4.64},{-20,25.6522},{26,25.6522}}, color={0,0,127},
           pattern=LinePattern.Dash));
 
@@ -20809,6 +20822,11 @@ First implementation.
         "Static differential pressure setpoint for the secondary pump"
         annotation (Placement(transformation(extent={{-320,-80},{-280,-40}}),
             iconTransformation(extent={{-140,-80},{-100,-40}})));
+      Modelica.Blocks.Sources.RealExpression PTot(y=sum(pumSecHW.P) + sum(
+            multiBoiler.boi.boi.QFue_flow))
+        annotation (Placement(transformation(extent={{140,-120},{160,-100}})));
+      Modelica.Blocks.Continuous.Integrator ETot
+        annotation (Placement(transformation(extent={{180,-120},{200,-100}})));
     equation
       connect(On.y, reaToBoolea.u)
         annotation (Line(points={{-239,90},{-162,90}}, color={0,0,127}));
@@ -20870,6 +20888,9 @@ First implementation.
           color={0,0,127}));
       connect(secPumCon.dpSetPoi, dpSetPoi) annotation (Line(points={{58,52},{-240,52},
               {-240,-60},{-300,-60}}, color={0,0,127}));
+      connect(PTot.y,ETot. u) annotation (Line(
+          points={{161,-110},{178,-110}},
+          color={0,0,127}));
       annotation (__Dymola_Commands(file=
               "modelica://ChillerPlantSystem/Resources/Scripts/Dymola/LejeunePlant/ChillerPlantSystem.mos"
             "Simulate and plot"),

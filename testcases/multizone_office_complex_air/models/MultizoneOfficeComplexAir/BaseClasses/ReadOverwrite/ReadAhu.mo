@@ -48,14 +48,15 @@ model ReadAhu "Collection of AHU measurements for BOPTEST"
     y(unit="Pa"))  "Discharge pressure of supply fan"
     annotation (Placement(transformation(extent={{0,10},{20,30}})));
 
-  Buildings.Utilities.IO.SignalExchange.Read PFanSup(
-    description="Electrical power measurement of supply fan for AHU",
+  Buildings.Utilities.IO.SignalExchange.Read PFanTot(
+    description=
+        "Total electrical power measurement of supply and return fans for AHU",
     KPIs=Buildings.Utilities.IO.SignalExchange.SignalTypes.SignalsForKPIs.ElectricPower,
-    y(unit="W")) "Electrical power of supply fan"
+    y(unit="W")) "Electrical power of supply and return fans"
     annotation (Placement(transformation(extent={{0,-20},{20,0}})));
 
-  Modelica.Blocks.Interfaces.RealInput PFanSup_in
-    "Electrical power of supply fan"
+  Modelica.Blocks.Interfaces.RealInput PFanTot_in
+    "Total electrical power of supply and return fans"
     annotation (Placement(transformation(extent={{-140,-30},{-100,10}})));
 
   Buildings.Utilities.IO.SignalExchange.Read TCooCoiSup(
@@ -139,7 +140,7 @@ equation
   connect(dp_sup.u, dp_in)
     annotation (Line(points={{-2,20},{-120,20}},
                                                color={0,0,127}));
-  connect(PFanSup_in, PFanSup.u) annotation (Line(
+  connect(PFanTot_in,PFanTot. u) annotation (Line(
       points={{-120,-10},{-62,-10},{-2,-10}},
       color={0,0,127},
       smooth=Smooth.Bezier));

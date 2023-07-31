@@ -1,7 +1,40 @@
 within MultizoneOfficeComplexAir.BaseClasses.HVACSide;
 model HVAC
   extends MultizoneOfficeComplexAir.BaseClasses.HVACSide.BaseClasses.AirSide(
-      sou(nPorts=3));
+      sou(nPorts=3),
+      floor1(
+      reaZonCor(zone="bot_floor_cor"),
+      reaZonSou(zone="bot_floor_sou"),
+      reaZonEas(zone="bot_floor_eas"),
+      reaZonWes(zone="bot_floor_wes"),
+      reaZonNor(zone="bot_floor_nor"),
+      oveZonCor(zone="bot_floor_cor"),
+      oveZonSou(zone="bot_floor_sou"),
+      oveZonEas(zone="bot_floor_eas"),
+      oveZonNor(zone="bot_floor_nor"),
+      oveZonWes(zone="bot_floor_wes")),
+      floor2(
+      reaZonCor(zone="mid_floor_cor"),
+      reaZonSou(zone="mid_floor_sou"),
+      reaZonEas(zone="mid_floor_eas"),
+      reaZonWes(zone="mid_floor_wes"),
+      reaZonNor(zone="mid_floor_nor"),
+      oveZonCor(zone="mid_floor_cor"),
+      oveZonSou(zone="mid_floor_sou"),
+      oveZonEas(zone="mid_floor_eas"),
+      oveZonNor(zone="mid_floor_nor"),
+      oveZonWes(zone="mid_floor_wes")),
+      floor3(
+      reaZonCor(zone="top_floor_cor"),
+      reaZonSou(zone="top_floor_sou"),
+      reaZonEas(zone="top_floor_eas"),
+      reaZonWes(zone="top_floor_wes"),
+      reaZonNor(zone="top_floor_nor"),
+      oveZonCor(zone="top_floor_cor"),
+      oveZonSou(zone="top_floor_sou"),
+      oveZonEas(zone="top_floor_eas"),
+      oveZonNor(zone="top_floor_nor"),
+      oveZonWes(zone="top_floor_wes")));
   package MediumCW = Buildings.Media.Water
     "Medium model";
   parameter Modelica.Units.SI.MassFlowRate mCHW_flow_nominal[:]={-datChi[1].QEva_flow_nominal
@@ -17,6 +50,8 @@ model HVAC
       3)} "Nominal mass flow rate at condenser water wide";
   parameter Modelica.Units.SI.Pressure dP_nominal=478250
     "Nominal pressure drop";
+
+
   MultizoneOfficeComplexAir.BaseClasses.BuildingControlEmulator.Systems.BoilerPlant boiWatPla(secPumCon(conPI(k=0.001)),
       redeclare package MediumHW = MediumHeaWat) "Boiler hot water plant"
     annotation (Placement(transformation(extent={{120,-110},{140,-90}})));
@@ -67,7 +102,7 @@ model HVAC
     annotation (Placement(transformation(extent={{-80,-60},{-60,-40}})));
   Modelica.Blocks.Sources.Constant TCHWSupSet(k=273.15 + 5.56)
     "Chilled water supply temperature setpoint"
-    annotation (Placement(transformation(extent={{-80,-30},{-60,-10}})));
+    annotation (Placement(transformation(extent={{-82,-30},{-62,-10}})));
   Modelica.Blocks.Interfaces.RealInput TWetBul
     "Entering air wet bulb temperature"
     annotation (Placement(transformation(extent={{-128,-82},{-100,-54}}),
@@ -162,8 +197,8 @@ equation
   connect(chiWatNet.p, chiWatPla.dP) annotation (Line(points={{41,-100},{54,
           -100},{54,-120},{-16,-120},{-16,-92},{-11.6,-92}},
                                                     color={0,0,127}));
-  connect(chiWatPla.TCWSet, TCWSupSet.y) annotation (Line(points={{-11.6,-104},
-          {-20,-104},{-20,-50},{-59,-50}},
+  connect(chiWatPla.TCWSet, TCWSupSet.y) annotation (Line(points={{-11.6,-104},{
+          -20,-104},{-20,-50},{-59,-50}},
                                       color={0,0,127}));
   connect(chiWatPla.TWetBul, TWetBul) annotation (Line(points={{-11.6,-108},{
           -92,-108},{-92,-68},{-114,-68}},
@@ -191,7 +226,7 @@ equation
   connect(PHWPum.y, reaHotWatSys.PPum_in) annotation (Line(points={{141,-44},{
           150,-44},{150,-38},{158,-38}}, color={0,0,127}));
   connect(TCHWSupSet.y, oveChiWatSys.TW_set_in)
-    annotation (Line(points={{-59,-20},{-52,-20}}, color={0,0,127}));
+    annotation (Line(points={{-61,-20},{-52,-20}}, color={0,0,127}));
   connect(oveChiWatSys.TW_set_out, chiWatPla.TCHWSet) annotation (Line(points={
           {-29,-20},{-22,-20},{-22,-100},{-11.6,-100}}, color={0,0,127}));
   connect(oveChiWatSys.dp_set_out, chiWatPla.dpSetPoi) annotation (Line(points=
@@ -214,6 +249,7 @@ equation
     annotation (Line(points={{91,-30},{158,-30}}, color={0,0,127}));
   connect(THWSupSet.y, oveHotWatSys.TW_set_in)
     annotation (Line(points={{61,-20},{68,-20}}, color={0,0,127}));
+
   annotation (experiment(
       StartTime=17280000,
       StopTime=17452800,

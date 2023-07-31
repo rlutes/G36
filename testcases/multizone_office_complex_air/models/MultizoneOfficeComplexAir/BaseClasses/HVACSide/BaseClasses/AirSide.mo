@@ -10,15 +10,6 @@ model AirSide "Air side system"
    annotation (Placement(transformation(extent={{-128,-14},{-100,14}}),
                               iconTransformation(extent={{-128,-34},{-100,-6}})));
 
-   Modelica.Blocks.Interfaces.RealInput TCooSetPoi[15];
-  Modelica.Blocks.Interfaces.BooleanInput TCooSetPoi_activate[15];
-  Modelica.Blocks.Interfaces.RealInput THeaSetPoi[15];
-  Modelica.Blocks.Interfaces.BooleanInput THeaSetPoi_activate[15];
-  Modelica.Blocks.Interfaces.RealInput mAirFlow[15];
-  Modelica.Blocks.Interfaces.BooleanInput mAirFlow_activate[15];
-  Modelica.Blocks.Interfaces.RealInput yPos[15];
-  Modelica.Blocks.Interfaces.BooleanInput yPos_activate[15];
-
   parameter Real alpha =  1.25  "Sizing factor";
   package MediumAir = Buildings.Media.Air "Medium model for air";
   package MediumCHW = Buildings.Media.Water "Medium model for chilled water";
@@ -166,7 +157,7 @@ model AirSide "Air side system"
     TemEcoHig=TemEcoHig,
     TemEcoLow=TemEcoLow,
     MixingBoxDamMin=MixingBoxDamMin,
-    waitTime=900,
+    waitTime=3600,
     HydEff=HydEff[1, :],
     MotEff=MotEff[1, :],
     VolFloCur=VolFloCur[1, :],
@@ -221,7 +212,8 @@ model AirSide "Air side system"
       MixingBox_Ti=600,
       Fan_k=0.001,
       Fan_Ti=600,
-      booleanExpression(y=floor1.duaFanAirHanUnit.On)),
+      booleanExpression(y=if floor1.duaFanAirHanUnit.TOut < 283.15 then floor1.duaFanAirHanUnit.On
+             else true)),
     redeclare package MediumCooWat = MediumCHW)
     annotation (Placement(transformation(extent={{114,20},{164,62}})));
 
@@ -236,7 +228,7 @@ model AirSide "Air side system"
     TemEcoHig=TemEcoHig,
     TemEcoLow=TemEcoLow,
     MixingBoxDamMin=MixingBoxDamMin,
-    waitTime=900,
+    waitTime=3600,
     HydEff=HydEff[2, :],
     MotEff=MotEff[2, :],
     VolFloCur=VolFloCur[2, :],
@@ -291,7 +283,8 @@ model AirSide "Air side system"
       MixingBox_Ti=600,
       Fan_k=0.001,
       Fan_Ti=600,
-      booleanExpression(y=floor2.duaFanAirHanUnit.On)),
+      booleanExpression(y=if floor2.duaFanAirHanUnit.TOut < 283.15 then floor2.duaFanAirHanUnit.On
+             else true)),
     redeclare package MediumCooWat = MediumCHW)
     annotation (Placement(transformation(extent={{114,20},{164,62}})));
 
@@ -306,7 +299,7 @@ model AirSide "Air side system"
     TemEcoHig=TemEcoHig,
     TemEcoLow=TemEcoLow,
     MixingBoxDamMin=MixingBoxDamMin,
-    waitTime=900,
+    waitTime=3600,
     HydEff=HydEff[3, :],
     MotEff=MotEff[3, :],
     VolFloCur=VolFloCur[3, :],
@@ -361,7 +354,8 @@ model AirSide "Air side system"
       MixingBox_Ti=600,
       Fan_k=0.001,
       Fan_Ti=600,
-      booleanExpression(y=floor3.duaFanAirHanUnit.On)),
+      booleanExpression(y=if floor3.duaFanAirHanUnit.TOut < 283.15 then floor3.duaFanAirHanUnit.On
+             else true)),
     redeclare package MediumCooWat = MediumCHW) "Top Floor"
     annotation (Placement(transformation(extent={{114,20},{164,62}})));
 
